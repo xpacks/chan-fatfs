@@ -1,2 +1,24 @@
-This project does not use the `master` branch, please
-switch to the `xpack` branch to get the project files.
+# Chan FatFs - Generic FAT File System Module
+
+This project, hosted on [GitHub](https://github.com/xpacks),
+includes the Chan FAT FS files, plus a POSIX layer adapter.
+
+## Version
+
+* R0.01
+
+## Documentation
+
+The Chan FAT FS main site is
+http://elm-chan.org/fsw/ff/00index_e.html.
+
+## Original files
+
+The original files are stored in the `originals` branch.
+
+These files were extracted from `ff1.zip`.
+
+To save space, the following folders/files were removed:
+
+* (none)
+
