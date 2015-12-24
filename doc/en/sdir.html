@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="up" title="FatFs" href="../00index_e.html">
+<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/sdir.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - DIR</title>
 </head>
@@ -11,23 +13,27 @@
 
 <div class="para">
 <h2>DIR</h2>
-<p>The <tt>DIR</tt> structure is used for the work area to read a directory.</p>
-<h4>FatFs</h4>
+<p>The <tt>DIR</tt> structure is used for the work area to read a directory by <tt>f_oepndir</tt>, <tt>f_readdir</tt>, <tt>f_findfirst</tt> and <tt>f_findnext</tt> function. Application program must not modify any member in this structure, or any data on the FAT volume can be collapsed.</p>
 <pre>
-typedef struct _DIR {
-    DWORD   sclust;       // Directory start cluster
-    DWORD   clust;        // Current reading cluster
-    DWORD   sect;         // Current reading sector
-    WORD    index;        // Current index
-} DIR;
-</pre>
-<h4>Tiny-FatFs</h4>
-<pre>
-typedef struct _DIR {
-    WORD    sclust;       // Directory start cluster
-    WORD    clust;        // Current reading cluster
-    DWORD   sect;         // Current reading sector
-    WORD    index;        // Current index
+<span class="k">typedef</span> <span class="k">struct</span> {
+    FATFS*  fs;         <span class="c">/* Pointer to the owner file system object */</span>
+    WORD    id;         <span class="c">/* Owner file system mount ID */</span>
+    WORD    index;      <span class="c">/* Index of directory entry to start to search next */</span>
+    DWORD   sclust;     <span class="c">/* Table start cluster (0:Root directory) */</span>
+    DWORD   clust;      <span class="c">/* Current cluster */</span>
+    DWORD   sect;       <span class="c">/* Current sector */</span>
+    BYTE*   dir;        <span class="c">/* Pointer to the current SFN entry in the win[] */</span>
+    BYTE*   fn;         <span class="c">/* Pointer to the SFN buffer (in/out) {file[8],ext[3],status[1]} */</span>
+<span class="k">#if</span> _FS_LOCK
+    UINT    lockid;     <span class="c">/* Sub-directory lock ID (0:Root directory) */</span>
+<span class="k">#endif</span>
+<span class="k">#if</span> _USE_LFN
+    WCHAR*  lfn;        <span class="c">/* Pointer to the LFN buffer (in/out) */</span>
+    WORD    lfn_idx;    <span class="c">/* Index of the LFN entris (0xFFFF:No LFN) */</span>
+<span class="k">#endif</span>
+<span class="k">#if</span> _USE_FIND
+    const TCHAR*  pat;  <span class="c">/* Ponter to the matching pattern */</span>
+<span class="k">#endif</span>
 } DIR;
 </pre>
 </div>

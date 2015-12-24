@@ -15,7 +15,7 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 
 ## Version
 
-* 0.1.0
+* R0.11a
 
 ## Releases
 
