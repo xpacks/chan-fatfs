@@ -5,7 +5,7 @@ includes the Chan FAT FS files, plus a POSIX layer adapter.
 
 ## Version
 
-* R0.09
+* R0.09a
 
 ## Documentation
 
@@ -16,7 +16,7 @@ http://elm-chan.org/fsw/ff/00index_e.html.
 
 The original files are stored in the `originals` branch.
 
-These files were extracted from `ff9.zip`.
+These files were extracted from `ff9a.zip`.
 
 To save space, the following folders/files were removed:
 
