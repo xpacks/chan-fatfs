@@ -82,6 +82,9 @@ includes the Chan FAT FS files, plus a POSIX layer adapter.
 
 ## Documentation
 
+For completeness, the original documentation, both in English 
+and Japanese, is preserved in the `doc` folder.
+
 The Chan FAT FS main site is
 http://elm-chan.org/fsw/ff/00index_e.html.
 
