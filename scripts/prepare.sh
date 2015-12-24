@@ -9,7 +9,8 @@ IFS=$'\n\t'
 # 	http://elm-chan.org/fsw/ff/arc/*
 
 # RELEASE_VERSION="1"
-RELEASE_VERSION="2"
+# RELEASE_VERSION="2"
+RELEASE_VERSION="2a"
 RELEASE_ID="R0.0${RELEASE_VERSION}"
 
 NAME_PREFIX="ff"
