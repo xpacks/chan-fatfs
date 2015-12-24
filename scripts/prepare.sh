@@ -32,7 +32,8 @@ IFS=$'\n\t'
 # RELEASE_VERSION="10a"
 # RELEASE_VERSION="10b"
 # RELEASE_VERSION="10c"
-RELEASE_VERSION="11"
+# RELEASE_VERSION="11"
+RELEASE_VERSION="11a"
 # RELEASE_ID="R0.0${RELEASE_VERSION}"
 RELEASE_ID="R0.${RELEASE_VERSION}"
 
@@ -40,6 +41,7 @@ NAME_PREFIX="ff"
 RELEASE_NAME="${NAME_PREFIX}${RELEASE_VERSION}"
 ARCHIVE_NAME="${RELEASE_NAME}.zip"
 ARCHIVE_URL="http://elm-chan.org/fsw/ff/arc/${ARCHIVE_NAME}"
+CURRENT_URL="http://elm-chan.org/fsw/ff/${ARCHIVE_NAME}"
 
 LOCAL_ARCHIVE_FILE="/tmp/xpacks/${ARCHIVE_NAME}"
 
@@ -57,6 +59,10 @@ if [ ! -f "${LOCAL_ARCHIVE_FILE}" ]
 then
   mkdir -p $(dirname ${LOCAL_ARCHIVE_FILE})
   curl -o "${LOCAL_ARCHIVE_FILE}" -L "${ARCHIVE_URL}"
+  if [ -z $(file "${ARCHIVE_URL}" | grep 'Zip') ]
+  then
+    curl -o "${LOCAL_ARCHIVE_FILE}" -L "${CURRENT_URL}"
+  fi
 fi
 
 unzip -q "${LOCAL_ARCHIVE_FILE}"
