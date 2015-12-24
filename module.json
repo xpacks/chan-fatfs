@@ -1,7 +1,7 @@
 {
 	"name": "ilg-chan-fatfs",
 	"description": "Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.",
-	"version": "0.1.0",
+	"version": "0.11.1-0",
 	"keywords": [
 		"fat",
 		"file system",

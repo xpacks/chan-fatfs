@@ -8,14 +8,14 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 
 * type: [xcdl](http://xcdl.github.io)
 * yotta name: `ilg-chan-fatfs`
-* yotta repo: http://yotta.mbed.com/#/module/ilg-chan-fatfs/0.1.0
+* yotta repo: http://yotta.mbed.com/#/module/ilg-chan-fatfs/0.11.1-0
 * git repo: https://github.com/xpacks/chan-fatfs.git
 * homepage: https://github.com/xpacks/chan-fatfs
 * latest archive: https://github.com/micro-os-plus/chan-fatfs/archive/xpack.zip
 
 ## Version
 
-* R0.11a
+* 0.11.1-0
 
 ## Releases
 
