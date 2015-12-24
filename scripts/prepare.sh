@@ -16,7 +16,8 @@ IFS=$'\n\t'
 # RELEASE_VERSION="4"
 # RELEASE_VERSION="4a"
 # RELEASE_VERSION="4b"
-RELEASE_VERSION="5"
+# RELEASE_VERSION="5"
+RELEASE_VERSION="5a"
 RELEASE_ID="R0.0${RELEASE_VERSION}"
 
 NAME_PREFIX="ff"
@@ -73,3 +74,6 @@ To save space, the following folders/files were removed:
 * (none)
 
 EOF
+
+echo
+echo Check if ok and when ready, issue: \`git commit -m ${ARCHIVE_NAME}\`
