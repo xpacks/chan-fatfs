@@ -1,0 +1,5 @@
+{
+	"$schema": "http://xcdl.github.io/schemas/xcdl-1-1.json",
+	"name": "/ilg/portable/chan-fatfs",
+	"description": "Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter."
+}
