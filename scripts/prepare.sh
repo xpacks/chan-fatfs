@@ -59,7 +59,7 @@ if [ ! -f "${LOCAL_ARCHIVE_FILE}" ]
 then
   mkdir -p $(dirname ${LOCAL_ARCHIVE_FILE})
   curl -o "${LOCAL_ARCHIVE_FILE}" -L "${ARCHIVE_URL}"
-  if [ -z $(file "${ARCHIVE_URL}" | grep 'Zip') ]
+  if [ -z $(file "${LOCAL_ARCHIVE_FILE}" | grep 'Zip') ]
   then
     curl -o "${LOCAL_ARCHIVE_FILE}" -L "${CURRENT_URL}"
   fi
