@@ -15,7 +15,7 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 
 ## Version
 
-* 0.11.1-0
+* 0.13.1-0
 
 ## Releases
 
@@ -52,12 +52,18 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 --- 
 ## Documentation
 
+For completeness, the original documentation, both in English 
+and Japanese, is preserved in the `doc` folder.
+
 The Chan FAT FS main site is
 http://elm-chan.org/fsw/ff/00index_e.html.
 
-The latest POSIX specs are available from [IEEE The Open Group](http://pubs.opengroup.org/onlinepubs/9699919799/nframe.html).
+## Original files
 
-## Tests
+The original files were downloaded from [Archives](http://elm-chan.org/fsw/ff/archives.html)
+and are stored in the `originals` branch.
+
+These files were extracted from `ff13a.zip`.
 
 TBD
 
