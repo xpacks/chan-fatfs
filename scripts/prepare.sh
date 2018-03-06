@@ -42,7 +42,8 @@ IFS=$'\n\t'
 # RELEASE_VERSION="11"
 # RELEASE_VERSION="11a"
 # RELEASE_VERSION="12"
-RELEASE_VERSION="12a"
+# RELEASE_VERSION="12a"
+RELEASE_VERSION="12b"
 # RELEASE_ID="R0.0${RELEASE_VERSION}"
 RELEASE_ID="R0.${RELEASE_VERSION}"
 
@@ -111,4 +112,4 @@ To save space, the following folders/files were removed:
 EOF
 
 echo
-echo Check if ok and when ready, issue: \`git commit -a -m ${ARCHIVE_NAME}\`
+echo Check if ok and when ready, issue: \`git add \. \&\& git commit -m ${ARCHIVE_NAME}\`
