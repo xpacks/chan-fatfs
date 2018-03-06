@@ -8,6 +8,13 @@ IFS=$'\n\t'
 # Archives can be downloaded from:
 # 	http://elm-chan.org/fsw/ff/arc/*
 
+# To use this script:
+# - cd chan-fats.git
+# - change to `originals` branch
+# - edit the RELEASE_VERSION
+# - bash scripts/prepare.sh
+# - commit 
+
 # RELEASE_VERSION="1"
 # RELEASE_VERSION="2"
 # RELEASE_VERSION="2a"
@@ -59,7 +66,7 @@ if [ ! -f "${LOCAL_ARCHIVE_FILE}" ]
 then
   mkdir -p $(dirname ${LOCAL_ARCHIVE_FILE})
   curl -o "${LOCAL_ARCHIVE_FILE}" -L "${ARCHIVE_URL}"
-  if [ -z $(file "${ARCHIVE_URL}" | grep 'Zip') ]
+  if [ -z $(file "${LOCAL_ARCHIVE_FILE}" | grep 'Zip') ]
   then
     curl -o "${LOCAL_ARCHIVE_FILE}" -L "${CURRENT_URL}"
   fi
@@ -83,14 +90,15 @@ includes the Chan FAT FS files, plus a POSIX layer adapter.
 ## Documentation
 
 For completeness, the original documentation, both in English 
-and Japanese, is preserved in the `doc` folder.
+and Japanese, is preserved in the \`doc\` folder.
 
 The Chan FAT FS main site is
 http://elm-chan.org/fsw/ff/00index_e.html.
 
 ## Original files
 
-The original files are stored in the \`originals\` branch.
+The original files were downloaded from [Archives](http://elm-chan.org/fsw/ff/archives.html)
+and are stored in the \`originals\` branch.
 
 These files were extracted from \`${ARCHIVE_NAME}\`.
 
@@ -101,4 +109,4 @@ To save space, the following folders/files were removed:
 EOF
 
 echo
-echo Check if ok and when ready, issue: \`git commit -m ${ARCHIVE_NAME}\`
+echo Check if ok and when ready, issue: \`git commit -a -m ${ARCHIVE_NAME}\`
