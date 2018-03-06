@@ -5,7 +5,7 @@ includes the Chan FAT FS files, plus a POSIX layer adapter.
 
 ## Version
 
-* R0.12
+* R0.12a
 
 ## Documentation
 
@@ -20,7 +20,7 @@ http://elm-chan.org/fsw/ff/00index_e.html.
 The original files were downloaded from [Archives](http://elm-chan.org/fsw/ff/archives.html)
 and are stored in the `originals` branch.
 
-These files were extracted from `ff12.zip`.
+These files were extracted from `ff12a.zip`.
 
 To save space, the following folders/files were removed:
 
