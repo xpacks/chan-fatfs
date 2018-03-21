@@ -23,7 +23,13 @@
 */
 
 
-#include "ff.h"
+// OS_USE_MICRO_OS_PLUS
+//#include "ff.h"
+#include "chan-fatfs/ff.h"
+
+// OS_USE_MICRO_OS_PLUS
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
 
 #if FF_USE_LFN	/* This module is blanked when non-LFN configuration */
 
@@ -15584,3 +15590,5 @@ DWORD ff_wtoupper (	/* Returns up-converted code point */
 
 
 #endif /* #if FF_USE_LFN */
+
+#pragma GCC diagnostic pop

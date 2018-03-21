@@ -7,8 +7,90 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
-#include "diskio.h"		/* FatFs lower layer API */
+//OS_USE_MICRO_OS_PLUS
+//#include "diskio.h"		/* FatFs lower layer API */
+#include "chan-fatfs/diskio.h"   /* FatFs lower layer API */
 
+#if defined(OS_USE_MICRO_OS_PLUS)
+
+DSTATUS disk_status (
+  PDRV pdrv   /* Physical drive nmuber to identify the drive */
+)
+{
+  DSTATUS stat = 0;
+
+  return stat;
+}
+
+
+
+/*-----------------------------------------------------------------------*/
+/* Inidialize a Drive                                                    */
+/*-----------------------------------------------------------------------*/
+
+DSTATUS disk_initialize (
+  PDRV pdrv       /* Physical drive nmuber to identify the drive */
+)
+{
+  DSTATUS stat = 0;
+
+  return stat;
+}
+
+
+
+/*-----------------------------------------------------------------------*/
+/* Read Sector(s)                                                        */
+/*-----------------------------------------------------------------------*/
+
+DRESULT disk_read (
+  PDRV pdrv,    /* Physical drive nmuber to identify the drive */
+  BYTE *buff,   /* Data buffer to store read data */
+  DWORD sector, /* Start sector in LBA */
+  UINT count    /* Number of sectors to read */
+)
+{
+  DRESULT res = 0;
+
+  return res;
+}
+
+
+
+/*-----------------------------------------------------------------------*/
+/* Write Sector(s)                                                       */
+/*-----------------------------------------------------------------------*/
+
+DRESULT disk_write (
+  PDRV pdrv,      /* Physical drive nmuber to identify the drive */
+  const BYTE *buff, /* Data to be written */
+  DWORD sector,   /* Start sector in LBA */
+  UINT count      /* Number of sectors to write */
+)
+{
+  DRESULT res = 0;
+
+  return res;
+}
+
+
+
+/*-----------------------------------------------------------------------*/
+/* Miscellaneous Functions                                               */
+/*-----------------------------------------------------------------------*/
+
+DRESULT disk_ioctl (
+  PDRV pdrv,    /* Physical drive nmuber (0..) */
+  BYTE cmd,   /* Control code */
+  void *buff    /* Buffer to send/receive control data */
+)
+{
+  DRESULT res = 0;
+
+  return res;
+}
+
+#else
 /* Definitions of physical drive number for each drive */
 #define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
 #define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
@@ -222,4 +304,6 @@ DRESULT disk_ioctl (
 
 	return RES_PARERR;
 }
+
+#endif
 

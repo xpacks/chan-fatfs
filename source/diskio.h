@@ -11,6 +11,9 @@ extern "C" {
 
 #include "integer.h"
 
+// OS_USE_MICRO_OS_PLUS
+#include "chan-fatfs/ffconf.h"
+
 
 /* Status of Disk Functions */
 typedef BYTE	DSTATUS;
@@ -28,6 +31,16 @@ typedef enum {
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
+#if defined(FF_FS_POSIX_INTEGRATION)
+
+DSTATUS disk_initialize (PDRV pdrv);
+DSTATUS disk_status (PDRV pdrv);
+DRESULT disk_read (PDRV pdrv, BYTE* buff, DWORD sector, UINT count);
+DRESULT disk_write (PDRV pdrv, const BYTE* buff, DWORD sector, UINT count);
+DRESULT disk_ioctl (PDRV pdrv, BYTE cmd, void* buff);
+DSTATUS disk_deinitialize (PDRV pdrv);
+
+#else
 
 DSTATUS disk_initialize (BYTE pdrv);
 DSTATUS disk_status (BYTE pdrv);
@@ -35,6 +48,7 @@ DRESULT disk_read (BYTE pdrv, BYTE* buff, DWORD sector, UINT count);
 DRESULT disk_write (BYTE pdrv, const BYTE* buff, DWORD sector, UINT count);
 DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
+#endif
 
 /* Disk Status Bits (DSTATUS) */
 

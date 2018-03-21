@@ -18,10 +18,17 @@
 /
 /----------------------------------------------------------------------------*/
 
+// OS_USE_MICRO_OS_PLUS
+//#include "ff.h"			/* Declarations of FatFs API */
+//#include "diskio.h"		/* Declarations of device I/O functions */
+#include "chan-fatfs/ff.h"     /* Declarations of FatFs API */
+#include "chan-fatfs/diskio.h"   /* Declarations of device I/O functions */
 
-#include "ff.h"			/* Declarations of FatFs API */
-#include "diskio.h"		/* Declarations of device I/O functions */
-
+// OS_USE_MICRO_OS_PLUS
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
 
 /*--------------------------------------------------------------------------
 
@@ -426,7 +433,10 @@ typedef struct {
 #if FF_VOLUMES < 1 || FF_VOLUMES > 10
 #error Wrong FF_VOLUMES setting
 #endif
+
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 static FATFS *FatFs[FF_VOLUMES];	/* Pointer to the filesystem objects (logical drives) */
+#endif
 static WORD Fsid;					/* File system mount ID */
 
 #if FF_FS_RPATH != 0 && FF_VOLUMES >= 2
@@ -916,7 +926,11 @@ void unlock_fs (
 
 static
 FRESULT chk_lock (	/* Check if the file can be accessed */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,    /* Directory object pointing the file to be checked */
+#else
 	DIR* dp,		/* Directory object pointing the file to be checked */
+#endif
 	int acc			/* Desired access type (0:Read mode open, 1:Write mode open, 2:Delete or rename) */
 )
 {
@@ -954,7 +968,11 @@ int enq_lock (void)	/* Check if an entry is available for a new object */
 
 static
 UINT inc_lock (	/* Increment object open counter and returns its index (0:Internal error) */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,  /* Directory object pointing the file to register or increment */
+#else
 	DIR* dp,	/* Directory object pointing the file to register or increment */
+#endif
 	int acc		/* Desired access (0:Read, 1:Write, 2:Delete/Rename) */
 )
 {
@@ -1111,6 +1129,15 @@ FRESULT sync_fs (	/* Returns FR_OK or FR_DISK_ERR */
 
 	return res;
 }
+
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+FRESULT fs_sync ( /* Returns FR_OK or FR_DISK_ERR */
+  FATFS* fs   /* Filesystem object */
+)
+{
+  return sync_fs(fs);
+}
+#endif
 
 #endif
 
@@ -1682,7 +1709,11 @@ FRESULT dir_clear (	/* Returns FR_OK or FR_DISK_ERR */
 
 static
 FRESULT dir_sdi (	/* FR_OK(0):succeeded, !=0:error */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,    /* Pointer to directory object */
+#else
 	DIR* dp,		/* Pointer to directory object */
+#endif
 	DWORD ofs		/* Offset of directory table */
 )
 {
@@ -1731,7 +1762,11 @@ FRESULT dir_sdi (	/* FR_OK(0):succeeded, !=0:error */
 
 static
 FRESULT dir_next (	/* FR_OK(0):succeeded, FR_NO_FILE:End of table, FR_DENIED:Could not stretch */
-	DIR* dp,		/* Pointer to the directory object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp,		/* Pointer to the directory object */
+#else
+  DIR* dp,    /* Pointer to the directory object */
+#endif
 	int stretch		/* 0: Do not stretch table, 1: Stretch table if needed */
 )
 {
@@ -1792,7 +1827,11 @@ FRESULT dir_next (	/* FR_OK(0):succeeded, FR_NO_FILE:End of table, FR_DENIED:Cou
 
 static
 FRESULT dir_alloc (	/* FR_OK(0):succeeded, !=0:error */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,    /* Pointer to the directory object */
+#else
 	DIR* dp,		/* Pointer to the directory object */
+#endif
 	UINT nent		/* Number of contiguous entries to allocate */
 )
 {
@@ -2167,7 +2206,11 @@ void get_xfileinfo (
 
 static
 FRESULT load_xdir (	/* FR_INT_ERR: invalid entry block */
-	DIR* dp			/* Reading direcotry object pointing top of the entry block to load */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp     /* Reading direcotry object pointing top of the entry block to load */
+#else
+  DIR* dp			/* Reading direcotry object pointing top of the entry block to load */
+#endif
 )
 {
 	FRESULT res;
@@ -2237,7 +2280,11 @@ void init_alloc_info (
 /*------------------------------------------------*/
 static
 FRESULT load_obj_xdir (	
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,      /* Blank directory object to be used to access containing direcotry */
+#else
 	DIR* dp,			/* Blank directory object to be used to access containing direcotry */
+#endif
 	const FFOBJID* obj	/* Object with its containing directory information */
 )
 {
@@ -2266,7 +2313,11 @@ FRESULT load_obj_xdir (
 /*----------------------------------------*/
 static
 FRESULT store_xdir (
-	DIR* dp				/* Pointer to the direcotry object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp				/* Pointer to the direcotry object */
+#else
+  DIR* dp       /* Pointer to the direcotry object */
+#endif
 )
 {
 	FRESULT res;
@@ -2346,7 +2397,11 @@ void create_xdir (
 
 static
 FRESULT dir_read (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,    /* Pointer to the directory object */
+#else
 	DIR* dp,		/* Pointer to the directory object */
+#endif
 	int vol			/* Filtered by 0:file/directory or 1:volume label */
 )
 {
@@ -2425,7 +2480,11 @@ FRESULT dir_read (
 
 static
 FRESULT dir_find (	/* FR_OK(0):succeeded, !=0:error */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp     /* Pointer to the directory object with the file name */
+#else
 	DIR* dp			/* Pointer to the directory object with the file name */
+#endif
 )
 {
 	FRESULT res;
@@ -2507,7 +2566,11 @@ FRESULT dir_find (	/* FR_OK(0):succeeded, !=0:error */
 
 static
 FRESULT dir_register (	/* FR_OK:succeeded, FR_DENIED:no free entry or too many SFN collision, FR_DISK_ERR:disk error */
-	DIR* dp				/* Target directory with object name to be created */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp				/* Target directory with object name to be created */
+#else
+  DIR* dp       /* Target directory with object name to be created */
+#endif
 )
 {
 	FRESULT res;
@@ -2534,7 +2597,11 @@ FRESULT dir_register (	/* FR_OK:succeeded, FR_DENIED:no free entry or too many S
 			res = fill_last_frag(&dp->obj, dp->clust, 0xFFFFFFFF);	/* Fill the last fragment on the FAT if needed */
 			if (res != FR_OK) return res;
 			if (dp->obj.sclust != 0) {		/* Is it a sub directory? */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	      FFDIR dj;
+#else
 				DIR dj;
+#endif
 
 				res = load_obj_xdir(&dj, &dp->obj);	/* Load the object status */
 				if (res != FR_OK) return res;
@@ -2614,7 +2681,11 @@ FRESULT dir_register (	/* FR_OK:succeeded, FR_DENIED:no free entry or too many S
 
 static
 FRESULT dir_remove (	/* FR_OK:Succeeded, FR_DISK_ERR:A disk error */
-	DIR* dp				/* Directory object pointing the entry to be removed */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp				/* Directory object pointing the entry to be removed */
+#else
+  DIR* dp       /* Directory object pointing the entry to be removed */
+#endif
 )
 {
 	FRESULT res;
@@ -2661,7 +2732,11 @@ FRESULT dir_remove (	/* FR_OK:Succeeded, FR_DISK_ERR:A disk error */
 
 static
 void get_fileinfo (
-	DIR* dp,		/* Pointer to the directory object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp,		/* Pointer to the directory object */
+#else
+  DIR* dp,    /* Pointer to the directory object */
+#endif
 	FILINFO* fno	/* Pointer to the file information to be filled */
 )
 {
@@ -2846,7 +2921,11 @@ int pattern_matching (	/* 0:not matched, 1:matched */
 
 static
 FRESULT create_name (	/* FR_OK: successful, FR_INVALID_NAME: could not create */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,      /* Pointer to the directory object */
+#else
 	DIR* dp,			/* Pointer to the directory object */
+#endif
 	const TCHAR** path	/* Pointer to pointer to the segment in the path string */
 )
 {
@@ -3044,7 +3123,11 @@ FRESULT create_name (	/* FR_OK: successful, FR_INVALID_NAME: could not create */
 
 static
 FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,      /* Directory object to return last directory and found object */
+#else
 	DIR* dp,			/* Directory object to return last directory and found object */
+#endif
 	const TCHAR* path	/* Full-path string to find a file or directory */
 )
 {
@@ -3066,7 +3149,11 @@ FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 	dp->obj.n_frag = 0;	/* Invalidate last fragment counter of the object */
 #if FF_FS_RPATH != 0
 	if (fs->fs_type == FS_EXFAT && dp->obj.sclust) {	/* exFAT: Retrieve the sub-directory's status */
-		DIR dj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+		FFDIR dj;
+#else
+    DIR dj;
+#endif
 
 		dp->obj.c_scl = fs->cdc_scl;
 		dp->obj.c_size = fs->cdc_size;
@@ -3130,6 +3217,8 @@ FRESULT follow_path (	/* FR_OK(0): successful, !=0: error code */
 /* Get logical drive number from path name                               */
 /*-----------------------------------------------------------------------*/
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+
 static
 int get_ldnumber (		/* Returns logical drive number (-1:invalid drive) */
 	const TCHAR** path	/* Pointer to pointer to the path name */
@@ -3184,7 +3273,7 @@ int get_ldnumber (		/* Returns logical drive number (-1:invalid drive) */
 	return vol;
 }
 
-
+#endif
 
 
 /*-----------------------------------------------------------------------*/
@@ -3221,20 +3310,33 @@ BYTE check_fs (	/* 0:FAT, 1:exFAT, 2:Valid BS but not FAT, 3:Not a BS, 4:Disk er
 
 static
 FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  PDRV pdrv,
+  int vol, /* Volume, 0 = auto */
+  FATFS* fs,    /* Pointer to pointer to the found filesystem object */
+#else
 	const TCHAR** path,	/* Pointer to pointer to the path name (drive number) */
-	FATFS** rfs,		/* Pointer to pointer to the found filesystem object */
+  FATFS** rfs,    /* Pointer to pointer to the found filesystem object */
+#endif
 	BYTE mode			/* !=0: Check write protection for write access */
 )
 {
 	BYTE fmt, *pt;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	int vol;
+#endif
 	DSTATUS stat;
 	DWORD bsect, fasize, tsect, sysect, nclst, szbfat, br[4];
 	WORD nrsv;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	FATFS *fs;
+#endif
 	UINT i;
 
 
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  if (vol < 0) return FR_INVALID_DRIVE;
+#else
 	/* Get logical drive number */
 	*rfs = 0;
 	vol = get_ldnumber(path);
@@ -3247,6 +3349,7 @@ FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
 	if (!lock_fs(fs)) return FR_TIMEOUT;	/* Lock the volume */
 #endif
 	*rfs = fs;							/* Return pointer to the filesystem object */
+#endif
 
 	mode &= (BYTE)~FA_READ;				/* Desired access mode, write access or not */
 	if (fs->fs_type != 0) {				/* If the volume has been mounted */
@@ -3263,7 +3366,11 @@ FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
 	/* Following code attempts to mount the volume. (analyze BPB and initialize the filesystem object) */
 
 	fs->fs_type = 0;					/* Clear the filesystem object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	fs->pdrv = pdrv;
+#else
 	fs->pdrv = LD2PD(vol);				/* Bind the logical drive and a physical drive */
+#endif
 	stat = disk_initialize(fs->pdrv);	/* Initialize the physical drive */
 	if (stat & STA_NOINIT) { 			/* Check if the initialization succeeded */
 		return FR_NOT_READY;			/* Failed to initialize due to no medium or hard error */
@@ -3491,17 +3598,35 @@ FRESULT validate (	/* Returns FR_OK or FR_INVALID_OBJECT */
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_mount (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  PDRV pdrv, /* Pointer to the block device object (NULL:unmount)*/
+  BYTE vol, /* Volume, 0 = auto */
+  FATFS* fs
+#else
 	FATFS* fs,			/* Pointer to the filesystem object (NULL:unmount)*/
 	const TCHAR* path,	/* Logical drive number to be mounted/unmounted */
-	BYTE opt			/* Mode option 0:Do not mount (delayed mount), 1:Mount immediately */
+  BYTE opt      /* Mode option 0:Do not mount (delayed mount), 1:Mount immediately */
+#endif
 )
 {
-	FATFS *cfs;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *cfs;
 	int vol;
+#endif
 	FRESULT res;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	const TCHAR *rp = path;
+#endif
 
-
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	if (pdrv == 0) {
+	    // Unmount.
+	    fs->fs_type = 0;
+	    res = FR_OK;
+	} else {
+      res = find_volume(pdrv, vol, fs, 0);
+	}
+#else
 	/* Get logical drive number */
 	vol = get_ldnumber(&rp);
 	if (vol < 0) return FR_INVALID_DRIVE;
@@ -3524,10 +3649,10 @@ FRESULT f_mount (
 #endif
 	}
 	FatFs[vol] = fs;					/* Register new fs object */
-
 	if (opt == 0) return FR_OK;			/* Do not mount now, it will be mounted later */
 
 	res = find_volume(&path, &fs, 0);	/* Force mounted the volume */
+#endif
 	LEAVE_FF(fs, res);
 }
 
@@ -3539,14 +3664,21 @@ FRESULT f_mount (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_open (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	FIL* fp,			/* Pointer to the blank file object */
 	const TCHAR* path,	/* Pointer to the file name */
 	BYTE mode			/* Access mode and file open mode flags */
 )
 {
 	FRESULT res;
-	DIR dj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR dj;
+#else
+  DIR dj;
 	FATFS *fs;
+#endif
 #if !FF_FS_READONLY
 	DWORD dw, cl, bcs, clst, sc;
 	FSIZE_t ofs;
@@ -3558,9 +3690,13 @@ FRESULT f_open (
 
 	/* Get logical drive */
 	mode &= FF_FS_READONLY ? FA_READ : FA_READ | FA_WRITE | FA_CREATE_ALWAYS | FA_CREATE_NEW | FA_OPEN_ALWAYS | FA_OPEN_APPEND;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	res = find_volume(&path, &fs, mode);
 	if (res == FR_OK) {
-		dj.obj.fs = fs;
+#else
+	{
+#endif
+	  dj.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&dj, path);	/* Follow the file path */
 #if !FF_FS_READONLY	/* Read/Write configuration */
@@ -3977,7 +4113,11 @@ FRESULT f_sync (
 					res = fill_last_frag(&fp->obj, fp->clust, 0xFFFFFFFF);	/* Fill last fragment on the FAT if needed */
 				}
 				if (res == FR_OK) {
-					DIR dj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+				  FFDIR dj;
+#else
+          DIR dj;
+#endif
 					DEF_NAMBUF
 
 					INIT_NAMBUF(fs);
@@ -4379,20 +4519,31 @@ FRESULT f_lseek (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_opendir (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+  FFDIR* dp,      /* Pointer to directory object to create */
+#else
 	DIR* dp,			/* Pointer to directory object to create */
+#endif
 	const TCHAR* path	/* Pointer to the directory path */
 )
 {
 	FRESULT res;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	FATFS *fs;
+#endif
 	DEF_NAMBUF
 
 
 	if (!dp) return FR_INVALID_OBJECT;
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	/* Get logical drive */
 	res = find_volume(&path, &fs, 0);
 	if (res == FR_OK) {
+#else
+	  {
+#endif
 		dp->obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(dp, path);			/* Follow the path to the directory */
@@ -4439,13 +4590,16 @@ FRESULT f_opendir (
 
 
 
-
 /*-----------------------------------------------------------------------*/
 /* Close Directory                                                       */
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_closedir (
-	DIR *dp		/* Pointer to the directory object to be closed */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp   /* Pointer to the directory object to be closed */
+#else
+  DIR *dp		/* Pointer to the directory object to be closed */
+#endif
 )
 {
 	FRESULT res;
@@ -4475,7 +4629,11 @@ FRESULT f_closedir (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_readdir (
-	DIR* dp,			/* Pointer to the open directory object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp,			/* Pointer to the open directory object */
+#else
+  DIR* dp,      /* Pointer to the open directory object */
+#endif
 	FILINFO* fno		/* Pointer to file information to return */
 )
 {
@@ -4511,7 +4669,11 @@ FRESULT f_readdir (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_findnext (
-	DIR* dp,		/* Pointer to the open directory object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR* dp,		/* Pointer to the open directory object */
+#else
+  DIR* dp,    /* Pointer to the open directory object */
+#endif
 	FILINFO* fno	/* Pointer to the file information structure */
 )
 {
@@ -4536,7 +4698,11 @@ FRESULT f_findnext (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_findfirst (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR* dp,        /* Pointer to the blank directory object */
+#else
 	DIR* dp,				/* Pointer to the blank directory object */
+#endif
 	FILINFO* fno,			/* Pointer to the file information structure */
 	const TCHAR* path,		/* Pointer to the directory to open */
 	const TCHAR* pattern	/* Pointer to the matching pattern */
@@ -4563,18 +4729,30 @@ FRESULT f_findfirst (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_stat (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path,	/* Pointer to the file path */
 	FILINFO* fno		/* Pointer to file information to return */
 )
 {
 	FRESULT res;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR dj;
+#else
 	DIR dj;
+#endif
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	/* Get logical drive */
 	res = find_volume(&path, &dj.obj.fs, 0);
 	if (res == FR_OK) {
+#else
+  {
+    dj.obj.fs = fs;
+#endif
 		INIT_NAMBUF(dj.obj.fs);
 		res = follow_path(&dj, path);	/* Follow the file path */
 		if (res == FR_OK) {				/* Follow completed */
@@ -4597,6 +4775,7 @@ FRESULT f_stat (
 /* Get Number of Free Clusters                                           */
 /*-----------------------------------------------------------------------*/
 
+#if 0
 FRESULT f_getfree (
 	const TCHAR* path,	/* Logical drive number */
 	DWORD* nclst,		/* Pointer to a variable to return number of free clusters */
@@ -4679,7 +4858,7 @@ FRESULT f_getfree (
 	LEAVE_FF(fs, res);
 }
 
-
+#endif
 
 
 /*-----------------------------------------------------------------------*/
@@ -4737,22 +4916,33 @@ FRESULT f_truncate (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_unlink (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path		/* Pointer to the file or directory path */
 )
 {
 	FRESULT res;
-	DIR dj, sdj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR dj, sdj;
+#else
+  DIR dj, sdj;
+  FATFS *fs;
+#endif
 	DWORD dclst = 0;
-	FATFS *fs;
 #if FF_FS_EXFAT
 	FFOBJID obj;
 #endif
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	/* Get logical drive */
 	res = find_volume(&path, &fs, FA_WRITE);
 	if (res == FR_OK) {
+#else
+  {
+#endif
 		dj.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&dj, path);		/* Follow the file path */
@@ -4831,20 +5021,31 @@ FRESULT f_unlink (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_mkdir (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path		/* Pointer to the directory path */
 )
 {
 	FRESULT res;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR dj;
+#else
 	DIR dj;
-	FATFS *fs;
+  FATFS *fs;
+#endif
 	BYTE *dir;
 	DWORD dcl, pcl, tm;
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	/* Get logical drive */
 	res = find_volume(&path, &fs, FA_WRITE);
 	if (res == FR_OK) {
+#else
+  {
+#endif
 		dj.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&dj, path);			/* Follow the file path */
@@ -4919,21 +5120,32 @@ FRESULT f_mkdir (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_rename (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path_old,	/* Pointer to the object name to be renamed */
 	const TCHAR* path_new	/* Pointer to the new name */
 )
 {
 	FRESULT res;
-	DIR djo, djn;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR djo, djn;
+#else
+  DIR djo, djn;
 	FATFS *fs;
+#endif
 	BYTE buf[FF_FS_EXFAT ? SZDIRE * 2 : SZDIRE], *dir;
 	DWORD dw;
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	get_ldnumber(&path_new);						/* Snip the drive number of new name off */
 	res = find_volume(&path_old, &fs, FA_WRITE);	/* Get logical drive of the old object */
 	if (res == FR_OK) {
+#else
+  {
+#endif
 		djo.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&djo, path_old);		/* Check old object */
@@ -4972,7 +5184,11 @@ FRESULT f_rename (
 #endif
 			{	/* At FAT/FAT32 volume */
 				mem_cpy(buf, djo.dir, SZDIRE);			/* Save directory entry of the object */
-				mem_cpy(&djn, &djo, sizeof (DIR));		/* Duplicate the directory object */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+				mem_cpy(&djn, &djo, sizeof (FFDIR));		/* Duplicate the directory object */
+#else
+				mem_cpy(&djn, &djo, sizeof (DIR));    /* Duplicate the directory object */
+#endif
 				res = follow_path(&djn, path_new);		/* Make sure if new object name is not in use */
 				if (res == FR_OK) {						/* Is new name already in use by any other object? */
 					res = (djn.obj.sclust == djo.obj.sclust && djn.dptr == djo.dptr) ? FR_NO_FILE : FR_EXIST;
@@ -5029,19 +5245,30 @@ FRESULT f_rename (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_chmod (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path,	/* Pointer to the file path */
 	BYTE attr,			/* Attribute bits */
 	BYTE mask			/* Attribute mask to change */
 )
 {
 	FRESULT res;
-	DIR dj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR dj;
+#else
+  DIR dj;
 	FATFS *fs;
+#endif
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	res = find_volume(&path, &fs, FA_WRITE);	/* Get logical drive */
-	if (res == FR_OK) {
+  if (res == FR_OK) {
+#else
+  {
+#endif
 		dj.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&dj, path);	/* Follow the file path */
@@ -5069,25 +5296,34 @@ FRESULT f_chmod (
 }
 
 
-
-
 /*-----------------------------------------------------------------------*/
 /* Change Timestamp                                                      */
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_utime (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+#endif
 	const TCHAR* path,	/* Pointer to the file/directory name */
 	const FILINFO* fno	/* Pointer to the timestamp to be set */
 )
 {
 	FRESULT res;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR dj;
+#else
 	DIR dj;
 	FATFS *fs;
+#endif
 	DEF_NAMBUF
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	res = find_volume(&path, &fs, FA_WRITE);	/* Get logical drive */
 	if (res == FR_OK) {
+#else
+	{
+#endif
 		dj.obj.fs = fs;
 		INIT_NAMBUF(fs);
 		res = follow_path(&dj, path);	/* Follow the file path */
@@ -5113,6 +5349,7 @@ FRESULT f_utime (
 	LEAVE_FF(fs, res);
 }
 
+
 #endif	/* FF_USE_CHMOD && !FF_FS_READONLY */
 
 
@@ -5129,7 +5366,11 @@ FRESULT f_getlabel (
 )
 {
 	FRESULT res;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FFDIR dj;
+#else
 	DIR dj;
+#endif
 	FATFS *fs;
 	UINT si, di;
 	WCHAR wc;
@@ -5222,7 +5463,11 @@ FRESULT f_setlabel (
 )
 {
 	FRESULT res;
-	DIR dj;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	FFDIR dj;
+#else
+  DIR dj;
+#endif
 	FATFS *fs;
 	BYTE dirvn[22];
 	UINT di;
@@ -5499,7 +5744,12 @@ FRESULT f_forward (
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_mkfs (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  PDRV pdrv,
+  BYTE part,
+#else
 	const TCHAR* path,	/* Logical drive number */
+#endif
 	BYTE opt,			/* Format option */
 	DWORD au,			/* Size of allocation unit (cluster) [byte] */
 	void* work,			/* Pointer to working buffer (null: use heap memory) */
@@ -5510,25 +5760,34 @@ FRESULT f_mkfs (
 	const UINT n_rootdir = 512;	/* Number of root directory entries for FAT volume */
 	static const WORD cst[] = {1, 4, 16, 64, 256, 512, 0};	/* Cluster size boundary for FAT volume (4Ks unit) */
 	static const WORD cst32[] = {1, 2, 4, 8, 16, 32, 0};	/* Cluster size boundary for FAT32 volume (128Ks unit) */
-	BYTE fmt, sys, *buf, *pte, pdrv, part;
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	BYTE fmt, sys, *buf, *pte;
+#else
+  BYTE fmt, sys, *buf, *pte, pdrv, part;
+#endif
 	WORD ss;	/* Sector size */
 	DWORD szb_buf, sz_buf, sz_blk, n_clst, pau, sect, nsect, n;
 	DWORD b_vol, b_fat, b_data;				/* Base LBA for volume, fat, data */
 	DWORD sz_vol, sz_rsv, sz_fat, sz_dir;	/* Size for volume, fat, dir, data */
 	UINT i;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	int vol;
+#endif
 	DSTATUS stat;
 #if FF_USE_TRIM || FF_FS_EXFAT
 	DWORD tbl[3];
 #endif
 
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 
+#else
 	/* Check mounted drive and clear work area */
 	vol = get_ldnumber(&path);					/* Get target logical drive */
 	if (vol < 0) return FR_INVALID_DRIVE;
 	if (FatFs[vol]) FatFs[vol]->fs_type = 0;	/* Clear the volume if mounted */
 	pdrv = LD2PD(vol);	/* Physical drive */
 	part = LD2PT(vol);	/* Partition (0:create as new, 1-4:get from partition table) */
+#endif
 
 	/* Check physical drive status */
 	stat = disk_initialize(pdrv);
@@ -5574,7 +5833,9 @@ FRESULT f_mkfs (
 		if (sz_vol < b_vol) LEAVE_MKFS(FR_MKFS_ABORTED);
 		sz_vol -= b_vol;						/* Volume size */
 	}
+	// OS_USE_MICRO_OS_PLUS
 	if (sz_vol < 128) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Check if volume size is >=128s */
+  // if (sz_vol < 50) LEAVE_MKFS(FR_MKFS_ABORTED);  /* Check if volume size is >=42s */
 
 	/* Pre-determine the FAT type */
 	do {
@@ -5772,7 +6033,7 @@ FRESULT f_mkfs (
 				if (n_clst <= MAX_FAT16 || n_clst > MAX_FAT32) LEAVE_MKFS(FR_MKFS_ABORTED);
 			} else {				/* FAT volume */
 				if (pau == 0) {	/* au auto-selection */
-					n = sz_vol / 0x1000;	/* Volume size in unit of 4KS */
+				  n = sz_vol / 0x1000;  /* Volume size in unit of 4KS */
 					for (i = 0, pau = 1; cst[i] && cst[i] <= n; i++, pau <<= 1) ;	/* Get from table */
 				}
 				n_clst = sz_vol / pau;
@@ -5790,7 +6051,11 @@ FRESULT f_mkfs (
 			b_data = b_fat + sz_fat * n_fats + sz_dir;	/* Data base */
 
 			/* Align data base to erase block boundary (for flash memory media) */
-			n = ((b_data + sz_blk - 1) & ~(sz_blk - 1)) - b_data;	/* Next nearest erase block from current data base */
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+			n = 0; // ((b_data * ss + sz_blk - 1) & ~(sz_blk - 1)) - b_data * ss;	/* Next nearest erase block from current data base */
+#else
+			n = ((b_data + sz_blk - 1) & ~(sz_blk - 1)) - b_data; /* Next nearest erase block from current data base */
+#endif
 			if (fmt == FS_FAT32) {		/* FAT32: Move FAT base */
 				sz_rsv += n; b_fat += n;
 			} else {					/* FAT: Expand FAT size */
@@ -6553,3 +6818,4 @@ FRESULT f_setcp (
 }
 #endif	/* FF_CODE_PAGE == 0 */
 
+#pragma GCC diagnostic pop
