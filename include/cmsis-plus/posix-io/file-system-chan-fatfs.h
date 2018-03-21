@@ -291,15 +291,19 @@ namespace os
             { self, device }, //
           locker_ (locker)
       {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
         trace::printf ("file_system_chan_fatfs_impl_lockable::%s()=@%p\n",
                        __func__, this);
+#endif
       }
 
     template<typename L>
       file_system_chan_fatfs_impl_lockable<L>::~file_system_chan_fatfs_impl_lockable ()
       {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
         trace::printf ("file_system_chan_fatfs_impl_lockable::%s() @%p\n",
                        __func__, this);
+#endif
       }
 
     template<typename L>

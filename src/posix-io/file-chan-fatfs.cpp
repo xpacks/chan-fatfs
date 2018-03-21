@@ -50,14 +50,18 @@ namespace os
         file_impl
           { self }
     {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("file_chan_fatfs_impl::%s()=@%p\n", __func__, this);
+#endif
 
       memset (&ff_fil_, 0, sizeof(ff_fil_));
     }
 
     file_chan_fatfs_impl::~file_chan_fatfs_impl ()
     {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("file_chan_fatfs_impl::%s() @%p\n", __func__, this);
+#endif
     }
 
     // ------------------------------------------------------------------------

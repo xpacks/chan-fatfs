@@ -49,14 +49,18 @@ namespace os
         directory_impl
           { self }
     {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("directory_chan_fatfs_impl::%s()=@%p\n", __func__, this);
+#endif
 
       memset (&ff_dir_, 0, sizeof(ff_dir_));
     }
 
     directory_chan_fatfs_impl::~directory_chan_fatfs_impl ()
     {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("directory_chan_fatfs_impl::%s() @%p\n", __func__, this);
+#endif
     }
 
     // ------------------------------------------------------------------------
