@@ -13,7 +13,7 @@
 #include "chan-fatfs/ff.h"   /* FatFs lower layer API */
 
 #include <cmsis-plus/rtos/os.h>
-#include <cmsis-plus/posix-io/device-block.h>
+#include <cmsis-plus/posix-io/block-device.h>
 
 #include <time.h>
 
@@ -55,7 +55,7 @@ disk_initialize (PDRV pdrv /* Pointer to block device */
 {
   DSTATUS stat = 0;
 
-  os::posix::device_block* pdb = (os::posix::device_block*) pdrv;
+  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
   int ret = pdb->open ();
   if (ret == -1)
     {
@@ -76,7 +76,7 @@ disk_read (PDRV pdrv, /* Pointer to block device */
            UINT count /* Number of sectors to read */
            )
 {
-  os::posix::device_block* pdb = (os::posix::device_block*) pdrv;
+  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
   int ret = pdb->read_block (buff, sector, count);
   if (ret > 0)
     {
@@ -96,7 +96,7 @@ disk_write (PDRV pdrv, /* Pointer to block device */
             UINT count /* Number of sectors to write */
             )
 {
-  os::posix::device_block* pdb = (os::posix::device_block*) pdrv;
+  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
   int ret = pdb->write_block (buff, sector, count);
   if (ret > 0)
     {
@@ -116,7 +116,7 @@ disk_ioctl (PDRV pdrv, /* Pointer to block device */
             )
 {
   DRESULT res = RES_OK;
-  os::posix::device_block* pdb = (os::posix::device_block*) pdrv;
+  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
   if (cmd == GET_SECTOR_COUNT)
     {
       DWORD* pdw = (DWORD*) buff;
@@ -145,7 +145,7 @@ disk_deinitialize (PDRV pdrv /* Pointer to block device */
 {
   DSTATUS stat = 0;
 
-  os::posix::device_block* pdb = (os::posix::device_block*) pdrv;
+  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
   int ret = pdb->close ();
   if (ret == -1)
     {

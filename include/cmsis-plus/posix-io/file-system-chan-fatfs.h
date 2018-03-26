@@ -64,7 +64,7 @@ namespace os
 
     public:
 
-      file_system_chan_fatfs_impl (file_system& self, device_block& device);
+      file_system_chan_fatfs_impl (file_system& self, block_device& device);
 
       /**
        * @cond ignore
@@ -196,7 +196,7 @@ namespace os
       public:
 
         file_system_chan_fatfs_impl_lockable (file_system& self,
-                                              device_block& device,
+                                              block_device& device,
                                               lockable_type& locker);
 
         /**
@@ -286,7 +286,7 @@ namespace os
 
     template<typename L>
       file_system_chan_fatfs_impl_lockable<L>::file_system_chan_fatfs_impl_lockable (
-          file_system& self, device_block& device, lockable_type& locker) :
+          file_system& self, block_device& device, lockable_type& locker) :
           file_system_chan_fatfs_impl
             { self, device }, //
           locker_ (locker)

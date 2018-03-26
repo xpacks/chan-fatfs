@@ -49,7 +49,7 @@ namespace os
     // ========================================================================
 
     file_system_chan_fatfs_impl::file_system_chan_fatfs_impl (
-        file_system& self, device_block& device) :
+        file_system& self, block_device& device) :
         file_system_impl
           { self, device }
     {
