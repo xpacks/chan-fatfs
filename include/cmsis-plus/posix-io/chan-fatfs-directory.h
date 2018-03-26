@@ -43,26 +43,14 @@ namespace os
   {
     // ------------------------------------------------------------------------
 
-    class directory_chan_fatfs_impl;
+    class chan_fatfs_directory_impl;
 
-    using directory_chan_fatfs = directory_implementable<directory_chan_fatfs_impl>;
+    using chan_fatfs_directory = directory_implementable<chan_fatfs_directory_impl>;
 
     // ========================================================================
 
-    class directory_chan_fatfs_impl : public directory_impl
+    class chan_fatfs_directory_impl : public directory_impl
     {
-      // ----------------------------------------------------------------------
-
-      /**
-       * @cond ignore
-       */
-
-      // friend class file_system_chan_fatfs;
-      // friend class file_system_impl_chan_fatfs;
-      /**
-       * @endcond
-       */
-
       // ----------------------------------------------------------------------
       /**
        * @name Constructors & Destructor
@@ -71,26 +59,26 @@ namespace os
 
     public:
 
-      directory_chan_fatfs_impl (directory& self);
+      chan_fatfs_directory_impl (directory& self);
 
       /**
        * @cond ignore
        */
 
       // The rule of five.
-      directory_chan_fatfs_impl (const directory_chan_fatfs_impl&) = delete;
-      directory_chan_fatfs_impl (directory_chan_fatfs_impl&&) = delete;
-      directory_chan_fatfs_impl&
-      operator= (const directory_chan_fatfs_impl&) = delete;
-      directory_chan_fatfs_impl&
-      operator= (directory_chan_fatfs_impl&&) = delete;
+      chan_fatfs_directory_impl (const chan_fatfs_directory_impl&) = delete;
+      chan_fatfs_directory_impl (chan_fatfs_directory_impl&&) = delete;
+      chan_fatfs_directory_impl&
+      operator= (const chan_fatfs_directory_impl&) = delete;
+      chan_fatfs_directory_impl&
+      operator= (chan_fatfs_directory_impl&&) = delete;
 
       /**
        * @endcond
        */
 
       virtual
-      ~directory_chan_fatfs_impl ();
+      ~chan_fatfs_directory_impl ();
 
       /**
        * @}

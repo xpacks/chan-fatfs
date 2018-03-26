@@ -25,8 +25,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <cmsis-plus/posix-io/file-chan-fatfs.h>
-#include <cmsis-plus/posix-io/file-system-chan-fatfs.h>
+#include <cmsis-plus/posix-io/chan-fatfs-file.h>
+#include <cmsis-plus/posix-io/chan-fatfs-file-system.h>
 
 #include "chan-fatfs/utils.h"
 
@@ -42,32 +42,32 @@ namespace os
     // ========================================================================
 
     // Explicit template instantiation.
-    template class file_implementable<file_chan_fatfs_impl> ;
+    template class file_implementable<chan_fatfs_file_impl> ;
 
     // ========================================================================
 
-    file_chan_fatfs_impl::file_chan_fatfs_impl (file& self) :
+    chan_fatfs_file_impl::chan_fatfs_file_impl (file& self) :
         file_impl
           { self }
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_chan_fatfs_impl::%s()=@%p\n", __func__, this);
+      trace::printf ("chan_fatfs_file_impl::%s()=@%p\n", __func__, this);
 #endif
 
       memset (&ff_fil_, 0, sizeof(ff_fil_));
     }
 
-    file_chan_fatfs_impl::~file_chan_fatfs_impl ()
+    chan_fatfs_file_impl::~chan_fatfs_file_impl ()
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_chan_fatfs_impl::%s() @%p\n", __func__, this);
+      trace::printf ("chan_fatfs_file_impl::%s() @%p\n", __func__, this);
 #endif
     }
 
     // ------------------------------------------------------------------------
 
     bool
-    file_chan_fatfs_impl::do_is_opened (void)
+    chan_fatfs_file_impl::do_is_opened (void)
     {
       if (ff_fil_.obj.fs != nullptr)
         {
@@ -79,7 +79,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html
     ssize_t
-    file_chan_fatfs_impl::do_read (void* buf, std::size_t nbyte)
+    chan_fatfs_file_impl::do_read (void* buf, std::size_t nbyte)
     {
       UINT br;
 
@@ -94,7 +94,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
     ssize_t
-    file_chan_fatfs_impl::do_write (const void* buf, std::size_t nbyte)
+    chan_fatfs_file_impl::do_write (const void* buf, std::size_t nbyte)
     {
       UINT bw;
 
@@ -109,7 +109,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html
     int
-    file_chan_fatfs_impl::do_fstat (struct stat* buf __attribute__((unused)))
+    chan_fatfs_file_impl::do_fstat (struct stat* buf __attribute__((unused)))
     {
       // Getting file status of an open file is not implemented.
       errno = ENOSYS;
@@ -118,7 +118,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/lseek.html
     off_t
-    file_chan_fatfs_impl::do_lseek (off_t offset, int whence)
+    chan_fatfs_file_impl::do_lseek (off_t offset, int whence)
     {
       if (whence != SEEK_SET || offset < 0)
         {
@@ -137,7 +137,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/ftruncate.html
     int
-    file_chan_fatfs_impl::do_ftruncate (off_t length)
+    chan_fatfs_file_impl::do_ftruncate (off_t length)
     {
       // Since f_truncate() has no param, do it in two steps.
       FRESULT res = f_lseek (&ff_fil_, length);
@@ -158,7 +158,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/fsync.html
     int
-    file_chan_fatfs_impl::do_fsync (void)
+    chan_fatfs_file_impl::do_fsync (void)
     {
       FRESULT res = f_sync (&ff_fil_);
       if (res != FR_OK)
@@ -171,7 +171,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/close.html
     int
-    file_chan_fatfs_impl::do_close (void)
+    chan_fatfs_file_impl::do_close (void)
     {
       FRESULT res = f_close (&ff_fil_);
 

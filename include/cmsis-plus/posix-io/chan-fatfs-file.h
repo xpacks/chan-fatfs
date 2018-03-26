@@ -41,9 +41,9 @@ namespace os
 {
   namespace posix
   {
-    class file_chan_fatfs_impl;
+    class chan_fatfs_file_impl;
 
-    using file_chan_fatfs = file_implementable<file_chan_fatfs_impl>;
+    using chan_fatfs_file = file_implementable<chan_fatfs_file_impl>;
 
     // ========================================================================
 
@@ -52,20 +52,8 @@ namespace os
      * @headerfile file.h <cmsis-plus/posix-io/file.h>
      * @ingroup cmsis-plus-posix-io-base
      */
-    class file_chan_fatfs_impl : public file_impl
+    class chan_fatfs_file_impl : public file_impl
     {
-      // ----------------------------------------------------------------------
-
-      /**
-       * @cond ignore
-       */
-
-      // friend class file_system_chan_fatfs;
-      // friend class file_system_impl_chan_fatfs;
-      /**
-       * @endcond
-       */
-
       // ----------------------------------------------------------------------
       /**
        * @name Constructors & Destructor
@@ -74,26 +62,26 @@ namespace os
 
     public:
 
-      file_chan_fatfs_impl (file& self);
+      chan_fatfs_file_impl (file& self);
 
       /**
        * @cond ignore
        */
 
       // The rule of five.
-      file_chan_fatfs_impl (const file_chan_fatfs_impl&) = delete;
-      file_chan_fatfs_impl (file_chan_fatfs_impl&&) = delete;
-      file_chan_fatfs_impl&
-      operator= (const file_chan_fatfs_impl&) = delete;
-      file_chan_fatfs_impl&
-      operator= (file_chan_fatfs_impl&&) = delete;
+      chan_fatfs_file_impl (const chan_fatfs_file_impl&) = delete;
+      chan_fatfs_file_impl (chan_fatfs_file_impl&&) = delete;
+      chan_fatfs_file_impl&
+      operator= (const chan_fatfs_file_impl&) = delete;
+      chan_fatfs_file_impl&
+      operator= (chan_fatfs_file_impl&&) = delete;
 
       /**
        * @endcond
        */
 
       virtual
-      ~file_chan_fatfs_impl ();
+      ~chan_fatfs_file_impl ();
 
       /**
        * @}
@@ -172,7 +160,7 @@ namespace os
     // ========================================================================
 
     inline FIL*
-    file_chan_fatfs_impl::impl_data (void)
+    chan_fatfs_file_impl::impl_data (void)
     {
       return &ff_fil_;
     }

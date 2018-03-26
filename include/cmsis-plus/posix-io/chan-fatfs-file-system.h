@@ -33,8 +33,8 @@
 // ----------------------------------------------------------------------------
 
 #include <cmsis-plus/posix-io/file-system.h>
-#include <cmsis-plus/posix-io/file-chan-fatfs.h>
-#include <cmsis-plus/posix-io/directory-chan-fatfs.h>
+#include <cmsis-plus/posix-io/chan-fatfs-file.h>
+#include <cmsis-plus/posix-io/chan-fatfs-directory.h>
 
 #include <chan-fatfs/ff.h>
 #include <chan-fatfs/utils.h>
@@ -47,14 +47,14 @@ namespace os
   {
     // ========================================================================
 
-    class file_system_chan_fatfs_impl : public file_system_impl
+    class chan_fatfs_file_system_impl : public file_system_impl
     {
       // --------------------------------------------------------------------
 
     public:
 
-      using file_type = file_implementable<file_chan_fatfs_impl>;
-      using directory_type = directory_implementable<directory_chan_fatfs_impl>;
+      using file_type = file_implementable<chan_fatfs_file_impl>;
+      using directory_type = directory_implementable<chan_fatfs_directory_impl>;
 
       // ----------------------------------------------------------------------
       /**
@@ -64,26 +64,26 @@ namespace os
 
     public:
 
-      file_system_chan_fatfs_impl (file_system& self, block_device& device);
+      chan_fatfs_file_system_impl (file_system& self, block_device& device);
 
       /**
        * @cond ignore
        */
 
       // The rule of five.
-      file_system_chan_fatfs_impl (const file_system_chan_fatfs_impl&) = delete;
-      file_system_chan_fatfs_impl (file_system_chan_fatfs_impl&&) = delete;
-      file_system_chan_fatfs_impl&
-      operator= (const file_system_chan_fatfs_impl&) = delete;
-      file_system_chan_fatfs_impl&
-      operator= (file_system_chan_fatfs_impl&&) = delete;
+      chan_fatfs_file_system_impl (const chan_fatfs_file_system_impl&) = delete;
+      chan_fatfs_file_system_impl (chan_fatfs_file_system_impl&&) = delete;
+      chan_fatfs_file_system_impl&
+      operator= (const chan_fatfs_file_system_impl&) = delete;
+      chan_fatfs_file_system_impl&
+      operator= (chan_fatfs_file_system_impl&&) = delete;
 
       /**
        * @endcond
        */
 
       virtual
-      ~file_system_chan_fatfs_impl ();
+      ~chan_fatfs_file_system_impl ();
 
       /**
        * @}
@@ -176,7 +176,7 @@ namespace os
     // ========================================================================
 
     template<typename L>
-      class file_system_chan_fatfs_impl_lockable : public file_system_chan_fatfs_impl
+      class chan_fatfs_file_system_impl_lockable : public chan_fatfs_file_system_impl
       {
         // --------------------------------------------------------------------
 
@@ -184,8 +184,8 @@ namespace os
 
         using lockable_type = L;
 
-        using file_type = file_lockable<file_chan_fatfs_impl, L>;
-        using directory_type = directory_lockable<directory_chan_fatfs_impl, L>;
+        using file_type = file_lockable<chan_fatfs_file_impl, L>;
+        using directory_type = directory_lockable<chan_fatfs_directory_impl, L>;
 
         // ----------------------------------------------------------------------
         /**
@@ -195,7 +195,7 @@ namespace os
 
       public:
 
-        file_system_chan_fatfs_impl_lockable (file_system& self,
+        chan_fatfs_file_system_impl_lockable (file_system& self,
                                               block_device& device,
                                               lockable_type& locker);
 
@@ -204,21 +204,21 @@ namespace os
          */
 
         // The rule of five.
-        file_system_chan_fatfs_impl_lockable (
-            const file_system_chan_fatfs_impl_lockable&) = delete;
-        file_system_chan_fatfs_impl_lockable (
-            file_system_chan_fatfs_impl_lockable&&) = delete;
-        file_system_chan_fatfs_impl_lockable&
-        operator= (const file_system_chan_fatfs_impl_lockable&) = delete;
-        file_system_chan_fatfs_impl_lockable&
-        operator= (file_system_chan_fatfs_impl_lockable&&) = delete;
+        chan_fatfs_file_system_impl_lockable (
+            const chan_fatfs_file_system_impl_lockable&) = delete;
+        chan_fatfs_file_system_impl_lockable (
+            chan_fatfs_file_system_impl_lockable&&) = delete;
+        chan_fatfs_file_system_impl_lockable&
+        operator= (const chan_fatfs_file_system_impl_lockable&) = delete;
+        chan_fatfs_file_system_impl_lockable&
+        operator= (chan_fatfs_file_system_impl_lockable&&) = delete;
 
         /**
          * @endcond
          */
 
         virtual
-        ~file_system_chan_fatfs_impl_lockable ();
+        ~chan_fatfs_file_system_impl_lockable ();
 
         /**
          * @}
@@ -267,10 +267,10 @@ namespace os
     // ========================================================================
 
     // Explicit template instantiation.
-    using file_system_chan_fatfs = file_system_implementable<file_system_chan_fatfs_impl>;
+    using chan_fatfs_file_system = file_system_implementable<chan_fatfs_file_system_impl>;
 
     template<typename L>
-      using file_system_chan_fatfs_lockable = file_system_lockable<file_system_chan_fatfs_impl_lockable<L>, L>;
+      using chan_fatfs_file_system_lockable = file_system_lockable<chan_fatfs_file_system_impl_lockable<L>, L>;
 
   // ========================================================================
   } /* namespace posix */
@@ -285,30 +285,30 @@ namespace os
     // ========================================================================
 
     template<typename L>
-      file_system_chan_fatfs_impl_lockable<L>::file_system_chan_fatfs_impl_lockable (
+      chan_fatfs_file_system_impl_lockable<L>::chan_fatfs_file_system_impl_lockable (
           file_system& self, block_device& device, lockable_type& locker) :
-          file_system_chan_fatfs_impl
+          chan_fatfs_file_system_impl
             { self, device }, //
           locker_ (locker)
       {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-        trace::printf ("file_system_chan_fatfs_impl_lockable::%s()=@%p\n",
+        trace::printf ("chan_fatfs_file_system_impl_lockable::%s()=@%p\n",
                        __func__, this);
 #endif
       }
 
     template<typename L>
-      file_system_chan_fatfs_impl_lockable<L>::~file_system_chan_fatfs_impl_lockable ()
+      chan_fatfs_file_system_impl_lockable<L>::~chan_fatfs_file_system_impl_lockable ()
       {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-        trace::printf ("file_system_chan_fatfs_impl_lockable::%s() @%p\n",
+        trace::printf ("chan_fatfs_file_system_impl_lockable::%s() @%p\n",
                        __func__, this);
 #endif
       }
 
     template<typename L>
       file*
-      file_system_chan_fatfs_impl_lockable<L>::do_vopen (
+      chan_fatfs_file_system_impl_lockable<L>::do_vopen (
           const char* path, int oflag,
           std::va_list args __attribute__((unused)))
       {
@@ -316,7 +316,7 @@ namespace os
 
         file_type* fil = allocate_file<file_type> (locker_);
 
-        FIL* ff_fil = ((file_chan_fatfs_impl&) (fil->impl ())).impl_data ();
+        FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
         FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
 
         if (res != FR_OK)
@@ -330,11 +330,11 @@ namespace os
 
     template<typename L>
       directory*
-      file_system_chan_fatfs_impl_lockable<L>::do_opendir (const char* dirname)
+      chan_fatfs_file_system_impl_lockable<L>::do_opendir (const char* dirname)
       {
         directory_type* dir = allocate_directory<directory_type> (locker_);
 
-        FFDIR* ff_dir = &(((directory_chan_fatfs_impl&) (dir->impl ())).ff_dir_);
+        FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
         FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
 
         if (res != FR_OK)
@@ -347,8 +347,8 @@ namespace os
       }
 
     template<typename L>
-      inline typename file_system_chan_fatfs_impl_lockable<L>::lockable_type&
-      file_system_chan_fatfs_impl_lockable<L>::locker (void)
+      inline typename chan_fatfs_file_system_impl_lockable<L>::lockable_type&
+      chan_fatfs_file_system_impl_lockable<L>::locker (void)
       {
         return locker_;
       }

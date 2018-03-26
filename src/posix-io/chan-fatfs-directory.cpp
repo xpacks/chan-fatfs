@@ -25,7 +25,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <cmsis-plus/posix-io/directory-chan-fatfs.h>
+#include <cmsis-plus/posix-io/chan-fatfs-directory.h>
 
 #include "chan-fatfs/utils.h"
 
@@ -41,32 +41,32 @@ namespace os
     // ========================================================================
 
     // Explicit template instantiation.
-    template class directory_implementable<directory_chan_fatfs_impl> ;
+    template class directory_implementable<chan_fatfs_directory_impl> ;
 
     // ========================================================================
 
-    directory_chan_fatfs_impl::directory_chan_fatfs_impl (directory& self) :
+    chan_fatfs_directory_impl::chan_fatfs_directory_impl (directory& self) :
         directory_impl
           { self }
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("directory_chan_fatfs_impl::%s()=@%p\n", __func__, this);
+      trace::printf ("chan_fatfs_directory_impl::%s()=@%p\n", __func__, this);
 #endif
 
       memset (&ff_dir_, 0, sizeof(ff_dir_));
     }
 
-    directory_chan_fatfs_impl::~directory_chan_fatfs_impl ()
+    chan_fatfs_directory_impl::~chan_fatfs_directory_impl ()
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("directory_chan_fatfs_impl::%s() @%p\n", __func__, this);
+      trace::printf ("chan_fatfs_directory_impl::%s() @%p\n", __func__, this);
 #endif
     }
 
     // ------------------------------------------------------------------------
 
     struct dirent*
-    directory_chan_fatfs_impl::do_read (void)
+    chan_fatfs_directory_impl::do_read (void)
     {
       FILINFO fno;
 
@@ -92,7 +92,7 @@ namespace os
     }
 
     void
-    directory_chan_fatfs_impl::do_rewind (void)
+    chan_fatfs_directory_impl::do_rewind (void)
     {
       FRESULT res = f_readdir (&ff_dir_, nullptr);
       if (res != FR_OK)
@@ -104,7 +104,7 @@ namespace os
     }
 
     int
-    directory_chan_fatfs_impl::do_close (void)
+    chan_fatfs_directory_impl::do_close (void)
     {
       FRESULT res = f_closedir (&ff_dir_);
 

@@ -25,7 +25,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <cmsis-plus/posix-io/file-system-chan-fatfs.h>
+#include <cmsis-plus/posix-io/chan-fatfs-file-system.h>
 #include <cmsis-plus/diag/trace.h>
 
 #include "chan-fatfs/utils.h"
@@ -44,24 +44,24 @@ namespace os
     // ========================================================================
 
     // Explicit template instantiation.
-    template class file_system_implementable<file_system_chan_fatfs_impl> ;
+    template class file_system_implementable<chan_fatfs_file_system_impl> ;
 
     // ========================================================================
 
-    file_system_chan_fatfs_impl::file_system_chan_fatfs_impl (
+    chan_fatfs_file_system_impl::chan_fatfs_file_system_impl (
         file_system& self, block_device& device) :
         file_system_impl
           { self, device }
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s()=@%p\n", __func__, this);
+      trace::printf ("chan_fatfs_file_system_impl::%s()=@%p\n", __func__, this);
 #endif
     }
 
-    file_system_chan_fatfs_impl::~file_system_chan_fatfs_impl ()
+    chan_fatfs_file_system_impl::~chan_fatfs_file_system_impl ()
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s() @%p\n", __func__, this);
+      trace::printf ("chan_fatfs_file_system_impl::%s() @%p\n", __func__, this);
 #endif
     }
 
@@ -77,7 +77,7 @@ namespace os
      * - size_t size
      */
     int
-    file_system_chan_fatfs_impl::do_vmkfs (int options, std::va_list args)
+    chan_fatfs_file_system_impl::do_vmkfs (int options, std::va_list args)
     {
       BYTE partition = static_cast<BYTE> (va_arg(args, int));
       BYTE opt = static_cast<BYTE> (options);
@@ -103,11 +103,11 @@ namespace os
      * - int volume, 0=auto, parsed if flags include FF_MOUNT_FLAGS_HAS_VOLUME
      */
     int
-    file_system_chan_fatfs_impl::do_vmount (unsigned int flags,
+    chan_fatfs_file_system_impl::do_vmount (unsigned int flags,
                                             std::va_list args)
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(%u)\n", __func__, flags);
+      trace::printf ("chan_fatfs_file_system_impl::%s(%u)\n", __func__, flags);
 #endif
 
       BYTE vol = 0;
@@ -128,11 +128,11 @@ namespace os
     }
 
     int
-    file_system_chan_fatfs_impl::do_umount (
+    chan_fatfs_file_system_impl::do_umount (
         unsigned int flags __attribute__((unused)))
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(%u)\n", __func__, flags);
+      trace::printf ("chan_fatfs_file_system_impl::%s(%u)\n", __func__, flags);
 #endif
 
       FRESULT res;
@@ -148,7 +148,7 @@ namespace os
     // ------------------------------------------------------------------------
 
     BYTE
-    file_system_chan_fatfs_impl::compute_mode (int oflag)
+    chan_fatfs_file_system_impl::compute_mode (int oflag)
     {
       BYTE mode = 0;
 
@@ -204,14 +204,14 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html
     file*
-    file_system_chan_fatfs_impl::do_vopen (
+    chan_fatfs_file_system_impl::do_vopen (
         const char* path, int oflag, std::va_list args __attribute__((unused)))
     {
       BYTE mode = compute_mode (oflag);
 
       file_type* fil = allocate_file<file_type> ();
 
-      FIL* ff_fil = ((file_chan_fatfs_impl&) (fil->impl ())).impl_data ();
+      FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
       FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
 
       if (res != FR_OK)
@@ -224,11 +224,11 @@ namespace os
     }
 
     directory*
-    file_system_chan_fatfs_impl::do_opendir (const char* dirname)
+    chan_fatfs_file_system_impl::do_opendir (const char* dirname)
     {
       directory_type* dir = allocate_directory<directory_type> ();
 
-      FFDIR* ff_dir = &(((directory_chan_fatfs_impl&) (dir->impl ())).ff_dir_);
+      FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
       FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
 
       if (res != FR_OK)
@@ -244,7 +244,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/chmod.html
     int
-    file_system_chan_fatfs_impl::do_chmod (const char* path, mode_t mode)
+    chan_fatfs_file_system_impl::do_chmod (const char* path, mode_t mode)
     {
       BYTE attr = 0;
       BYTE mask = 0;
@@ -257,7 +257,7 @@ namespace os
         }
 
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(\"%s\") 0x%02X 0x%02X\n",
+      trace::printf ("chan_fatfs_file_system_impl::%s(\"%s\") 0x%02X 0x%02X\n",
                      __func__, path, attr, mask);
 #endif
 
@@ -273,7 +273,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/stat.html
     int
-    file_system_chan_fatfs_impl::do_stat (const char* path, struct stat* buf)
+    chan_fatfs_file_system_impl::do_stat (const char* path, struct stat* buf)
     {
       FILINFO fno;
 
@@ -299,7 +299,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/truncate.html
     int
-    file_system_chan_fatfs_impl::do_truncate (
+    chan_fatfs_file_system_impl::do_truncate (
         const char* path __attribute__((unused)),
         off_t length __attribute__((unused)))
     {
@@ -310,7 +310,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html
     int
-    file_system_chan_fatfs_impl::do_rename (const char* existing,
+    chan_fatfs_file_system_impl::do_rename (const char* existing,
                                             const char* _new)
     {
       FRESULT res = f_rename (&ff_fs_, existing, _new);
@@ -324,7 +324,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/unlink.html
     int
-    file_system_chan_fatfs_impl::do_unlink (const char* path)
+    chan_fatfs_file_system_impl::do_unlink (const char* path)
     {
       FILINFO fno;
       FRESULT res = f_stat (&ff_fs_, path, &fno);
@@ -351,7 +351,7 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/utime.html
     int
-    file_system_chan_fatfs_impl::do_utime (const char* path,
+    chan_fatfs_file_system_impl::do_utime (const char* path,
                                            const struct utimbuf* times)
     {
       // FatFS has no access date, only modified date.
@@ -361,7 +361,7 @@ namespace os
       fno.ftime = static_cast<WORD> (mstime);
 
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(\"%s\") 0x%8X 0x%08X\n",
+      trace::printf ("chan_fatfs_file_system_impl::%s(\"%s\") 0x%8X 0x%08X\n",
                      __func__, path, fno.fdate, fno.ftime);
 #endif
 
@@ -377,11 +377,11 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/mkdir.html
     int
-    file_system_chan_fatfs_impl::do_mkdir (const char* path,
+    chan_fatfs_file_system_impl::do_mkdir (const char* path,
                                            mode_t mode __attribute__((unused)))
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(\"%s\") 0x%02X 0x%02X\n",
+      trace::printf ("chan_fatfs_file_system_impl::%s(\"%s\") 0x%02X 0x%02X\n",
                      __func__, path);
 #endif
 
@@ -396,10 +396,10 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/rmdir.html
     int
-    file_system_chan_fatfs_impl::do_rmdir (const char* path)
+    chan_fatfs_file_system_impl::do_rmdir (const char* path)
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s(\"%s\") 0x%02X 0x%02X\n",
+      trace::printf ("chan_fatfs_file_system_impl::%s(\"%s\") 0x%02X 0x%02X\n",
                      __func__, path);
 #endif
 
@@ -428,10 +428,10 @@ namespace os
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/sync.html
     void
-    file_system_chan_fatfs_impl::do_sync (void)
+    chan_fatfs_file_system_impl::do_sync (void)
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
-      trace::printf ("file_system_chan_fatfs_impl::%s()\n", __func__);
+      trace::printf ("chan_fatfs_file_system_impl::%s()\n", __func__);
 #endif
 
       fs_sync (&ff_fs_);
