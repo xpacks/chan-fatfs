@@ -3,6 +3,10 @@
 typedef void* PDRV;
 #define FF_FS_POSIX_INTEGRATION
 
+#if defined(OS_USE_OS_APP_CONFIG_H)
+#include <cmsis-plus/os-app-config.h>
+#endif
+
 /*---------------------------------------------------------------------------/
 /  FatFs - Configuration file
 /---------------------------------------------------------------------------*/
@@ -198,8 +202,13 @@ typedef void* PDRV;
 /  funciton will be available. */
 
 
+// OS_USE_MICRO_OS_PLUS
+#if !defined(FF_MIN_SS)
 #define FF_MIN_SS		512
+#endif
+#if !defined(FF_MAX_SS)
 #define FF_MAX_SS		512
+#endif
 /* This set of options configures the range of sector size to be supported. (512,
 /  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
 /  harddisk. But a larger value may be required for on-board flash memory and some
