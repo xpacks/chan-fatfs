@@ -26,6 +26,7 @@
  */
 
 #include <cmsis-plus/posix-io/chan-fatfs-file-system.h>
+#include <cmsis-plus/posix-io/block-device.h>
 #include <cmsis-plus/diag/trace.h>
 
 #include "chan-fatfs/utils.h"
@@ -435,6 +436,44 @@ namespace os
 #endif
 
       fs_sync (&ff_fs_);
+    }
+
+    int
+    chan_fatfs_file_system_impl::do_statvfs (struct statvfs* buf)
+    {
+#if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
+      trace::printf ("chan_fatfs_file_system_impl::%s(%p)\n", __func__, buf);
+#endif
+
+      DWORD nclst;
+      FRESULT res = f_getfree (&ff_fs_, &nclst);
+      if (res != FR_OK)
+        {
+          errno = fatfs_compute_errno (res);
+          return -1;
+        }
+
+      buf->f_bsize = device ().block_logical_size_bytes ();
+      buf->f_frsize = buf->f_bsize;
+      buf->f_blocks = device ().blocks ();
+
+      // Compute free blocks from free clusters.
+      buf->f_bfree = ff_fs_.free_clst * ff_fs_.csize;
+      buf->f_bavail = buf->f_bfree;
+
+      // Count of files not supported (FatFS does not use inodes).
+      buf->f_files = 0;
+      buf->f_ffree = 0;
+      buf->f_favail = buf->f_ffree;
+
+      // The file system ID is derived from a specific pointer.
+      buf->f_fsid = reinterpret_cast<unsigned long> (this);
+
+      // Flags not supported.
+      buf->f_flag = 0;
+
+      buf->f_namemax = FF_MAX_LFN;
+      return 0;
     }
 
   // ========================================================================

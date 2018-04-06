@@ -4542,7 +4542,7 @@ FRESULT f_opendir (
 	res = find_volume(&path, &fs, 0);
 	if (res == FR_OK) {
 #else
-	  {
+	{
 #endif
 		dp->obj.fs = fs;
 		INIT_NAMBUF(fs);
@@ -4769,30 +4769,41 @@ FRESULT f_stat (
 }
 
 
-
 #if !FF_FS_READONLY
 /*-----------------------------------------------------------------------*/
 /* Get Number of Free Clusters                                           */
 /*-----------------------------------------------------------------------*/
 
-#if 0
+
 FRESULT f_getfree (
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+  FATFS *fs,
+  DWORD* nclst   /* Pointer to a variable to return number of free clusters */
+#else
 	const TCHAR* path,	/* Logical drive number */
 	DWORD* nclst,		/* Pointer to a variable to return number of free clusters */
 	FATFS** fatfs		/* Pointer to return pointer to corresponding filesystem object */
+#endif
 )
 {
 	FRESULT res;
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	FATFS *fs;
+#endif
 	DWORD nfree, clst, sect, stat;
 	UINT i;
 	FFOBJID obj;
 
 
+#if !defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
 	/* Get logical drive */
 	res = find_volume(&path, &fs, 0);
 	if (res == FR_OK) {
 		*fatfs = fs;				/* Return ptr to the fs object */
+#else
+	{
+		res = FR_OK;
+#endif
 		/* If free_clst is valid, return it without full FAT scan */
 		if (fs->free_clst <= fs->n_fatent - 2) {
 			*nclst = fs->free_clst;
@@ -4857,8 +4868,6 @@ FRESULT f_getfree (
 
 	LEAVE_FF(fs, res);
 }
-
-#endif
 
 
 /*-----------------------------------------------------------------------*/

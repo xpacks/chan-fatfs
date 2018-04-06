@@ -271,7 +271,7 @@ FRESULT fs_sync (FATFS* fs);   /* Filesystem object */
 FRESULT f_chdir (const TCHAR* path);                /* Change current directory */
 FRESULT f_chdrive (const TCHAR* path);                /* Change current drive */
 FRESULT f_getcwd (TCHAR* buff, UINT len);             /* Get current directory */
-FRESULT f_getfree (const TCHAR* path, DWORD* nclst, FATFS** fatfs); /* Get number of free clusters on the drive */
+FRESULT f_getfree (FATFS *fs, DWORD* nclst); /* Get number of free clusters on the drive */
 FRESULT f_getlabel (const TCHAR* path, TCHAR* label, DWORD* vsn); /* Get volume label */
 FRESULT f_setlabel (const TCHAR* label);              /* Set volume label */
 FRESULT f_forward (FIL* fp, UINT(*func)(const BYTE*,UINT), UINT btf, UINT* bf); /* Forward data to the stream */

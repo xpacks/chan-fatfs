@@ -28,6 +28,8 @@
 #include <cmsis-plus/posix-io/chan-fatfs-file.h>
 #include <cmsis-plus/posix-io/chan-fatfs-file-system.h>
 
+#include <cmsis-plus/posix/sys/statvfs.h>
+
 #include "chan-fatfs/utils.h"
 
 #include <fcntl.h>

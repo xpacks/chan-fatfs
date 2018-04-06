@@ -107,7 +107,7 @@ namespace os
        * @return
        */
       virtual int
-      do_vmkfs(int options, std::va_list args) override;
+      do_vmkfs (int options, std::va_list args) override;
 
       virtual int
       do_vmount (unsigned int flags, std::va_list args) override;
@@ -147,6 +147,9 @@ namespace os
 
       virtual int
       do_utime (const char* path, const struct utimbuf* times) override;
+
+      virtual int
+      do_statvfs (struct statvfs* buf) override;
 
       /**
        * @}
