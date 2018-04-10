@@ -45,9 +45,9 @@ namespace os
 
     // ========================================================================
 
-    chan_fatfs_directory_impl::chan_fatfs_directory_impl (directory& self) :
+    chan_fatfs_directory_impl::chan_fatfs_directory_impl (class file_system& fs) :
         directory_impl
-          { self }
+          { fs }
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("chan_fatfs_directory_impl::%s()=@%p\n", __func__, this);

@@ -47,12 +47,14 @@ namespace os
     // Explicit template instantiation.
     template class file_system_implementable<chan_fatfs_file_system_impl> ;
 
+    // template chan_fatfs_file* file_system::allocate_file<chan_fatfs_file>(void);
+
     // ========================================================================
 
     chan_fatfs_file_system_impl::chan_fatfs_file_system_impl (
-        file_system& self, block_device& device) :
+        block_device& device) :
         file_system_impl
-          { self, device }
+          { device }
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("chan_fatfs_file_system_impl::%s()=@%p\n", __func__, this);
@@ -206,11 +208,12 @@ namespace os
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html
     file*
     chan_fatfs_file_system_impl::do_vopen (
-        const char* path, int oflag, std::va_list args __attribute__((unused)))
+        class file_system& fs, const char* path, int oflag,
+        std::va_list args __attribute__((unused)))
     {
       BYTE mode = compute_mode (oflag);
 
-      file_type* fil = allocate_file<file_type> ();
+      file_type* fil = fs.allocate_file<file_type> ();
 
       FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
       FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
@@ -225,9 +228,10 @@ namespace os
     }
 
     directory*
-    chan_fatfs_file_system_impl::do_opendir (const char* dirname)
+    chan_fatfs_file_system_impl::do_opendir (class file_system& fs,
+                                             const char* dirname)
     {
-      directory_type* dir = allocate_directory<directory_type> ();
+      directory_type* dir = fs.allocate_directory<directory_type> ();
 
       FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
       FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);

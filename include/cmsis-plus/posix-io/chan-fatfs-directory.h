@@ -59,7 +59,7 @@ namespace os
 
     public:
 
-      chan_fatfs_directory_impl (directory& self);
+      chan_fatfs_directory_impl (class file_system& fs);
 
       /**
        * @cond ignore
@@ -102,11 +102,6 @@ namespace os
 
       virtual int
       do_close (void) override;
-
-      // ----------------------------------------------------------------------
-
-      directory&
-      self (void);
 
       /**
        * @}

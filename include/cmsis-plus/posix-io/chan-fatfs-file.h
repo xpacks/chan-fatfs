@@ -62,7 +62,7 @@ namespace os
 
     public:
 
-      chan_fatfs_file_impl (file& self);
+      chan_fatfs_file_impl (class file_system& fs);
 
       /**
        * @cond ignore
@@ -119,11 +119,6 @@ namespace os
 
       virtual int
       do_close (void) override;
-
-      // ----------------------------------------------------------------------
-
-      file&
-      self (void);
 
       FIL*
       impl_data (void);

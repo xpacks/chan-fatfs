@@ -64,7 +64,7 @@ namespace os
 
     public:
 
-      chan_fatfs_file_system_impl (file_system& self, block_device& device);
+      chan_fatfs_file_system_impl (block_device& device);
 
       /**
        * @cond ignore
@@ -116,10 +116,11 @@ namespace os
       do_umount (unsigned int flags) override;
 
       virtual file*
-      do_vopen (const char* path, int oflag, std::va_list args) override;
+      do_vopen (class file_system& fs, const char* path, int oflag,
+                std::va_list args) override;
 
       virtual directory*
-      do_opendir (const char* dirname) override;
+      do_opendir (class file_system& fs, const char* dirname) override;
 
       virtual int
       do_mkdir (const char* path, mode_t mode) override;
@@ -198,8 +199,7 @@ namespace os
 
       public:
 
-        chan_fatfs_file_system_impl_lockable (file_system& self,
-                                              block_device& device,
+        chan_fatfs_file_system_impl_lockable (block_device& device,
                                               lockable_type& locker);
 
         /**
@@ -239,10 +239,11 @@ namespace os
         // Implementations.
 
         virtual file*
-        do_vopen (const char* path, int oflag, std::va_list args) override;
+        do_vopen (class file_system& fs, const char* path, int oflag,
+                  std::va_list args) override;
 
         virtual directory*
-        do_opendir (const char* dirname) override;
+        do_opendir (class file_system& fs, const char* dirname) override;
 
         // ----------------------------------------------------------------------
 
@@ -289,9 +290,9 @@ namespace os
 
     template<typename L>
       chan_fatfs_file_system_impl_lockable<L>::chan_fatfs_file_system_impl_lockable (
-          file_system& self, block_device& device, lockable_type& locker) :
+          block_device& device, lockable_type& locker) :
           chan_fatfs_file_system_impl
-            { self, device }, //
+            { device }, //
           locker_ (locker)
       {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
@@ -312,12 +313,12 @@ namespace os
     template<typename L>
       file*
       chan_fatfs_file_system_impl_lockable<L>::do_vopen (
-          const char* path, int oflag,
+          class file_system& fs, const char* path, int oflag,
           std::va_list args __attribute__((unused)))
       {
         BYTE mode = compute_mode (oflag);
 
-        file_type* fil = allocate_file<file_type> (locker_);
+        file_type* fil = fs.allocate_file<file_type> (locker_);
 
         FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
         FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
@@ -333,9 +334,10 @@ namespace os
 
     template<typename L>
       directory*
-      chan_fatfs_file_system_impl_lockable<L>::do_opendir (const char* dirname)
+      chan_fatfs_file_system_impl_lockable<L>::do_opendir (
+          class file_system& fs, const char* dirname)
       {
-        directory_type* dir = allocate_directory<directory_type> (locker_);
+        directory_type* dir = fs.allocate_directory<directory_type> (locker_);
 
         FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
         FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
