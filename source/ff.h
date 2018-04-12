@@ -46,6 +46,10 @@ extern PARTITION VolToPart[];	/* Volume - Partition resolution table */
 #endif
 
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#endif
 
 /* Type of path name strings on FatFs API */
 
@@ -70,6 +74,7 @@ typedef char TCHAR;
 
 #endif
 
+#pragma GCC diagnostic pop
 
 
 /* Type of file size variables */
@@ -80,6 +85,9 @@ typedef QWORD FSIZE_t;
 typedef DWORD FSIZE_t;
 #endif
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpadded"
 
 
 /* Filesystem object structure (FATFS) */
@@ -132,7 +140,6 @@ typedef struct {
 } FATFS;
 
 
-
 /* Object ID and allocation information (FFOBJID) */
 
 typedef struct {
@@ -153,7 +160,6 @@ typedef struct {
 	UINT	lockid;			/* File lock ID origin from 1 (index of file semaphore table Files[]) */
 #endif
 } FFOBJID;
-
 
 
 /* File object structure (FIL) */
@@ -216,6 +222,7 @@ typedef struct {
 #endif
 } FILINFO;
 
+#pragma GCC diagnostic pop
 
 
 /* File function return code (FRESULT) */

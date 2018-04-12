@@ -81,7 +81,7 @@ namespace os
        */
 
       virtual
-      ~chan_fatfs_file_impl ();
+      ~chan_fatfs_file_impl () override;
 
       /**
        * @}

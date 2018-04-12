@@ -43,8 +43,15 @@ namespace os
   {
     // ========================================================================
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wweak-template-vtables"
+#endif
+
     // Explicit template instantiation.
     template class file_implementable<chan_fatfs_file_impl> ;
+
+#pragma GCC diagnostic pop
 
     // ========================================================================
 
@@ -85,7 +92,7 @@ namespace os
     {
       UINT br;
 
-      FRESULT res = f_read (&ff_fil_, buf, nbyte, &br);
+      FRESULT res = f_read (&ff_fil_, buf, static_cast<UINT> (nbyte), &br);
       if (res != FR_OK)
         {
           errno = fatfs_compute_errno (res);
@@ -100,7 +107,7 @@ namespace os
     {
       UINT bw;
 
-      FRESULT res = f_write (&ff_fil_, buf, nbyte, &bw);
+      FRESULT res = f_write (&ff_fil_, buf, static_cast<UINT> (nbyte), &bw);
       if (res != FR_OK)
         {
           errno = fatfs_compute_errno (res);
@@ -128,7 +135,7 @@ namespace os
           return -1;
         }
 
-      FRESULT res = f_lseek (&ff_fil_, offset);
+      FRESULT res = f_lseek (&ff_fil_, static_cast<FSIZE_t> (offset));
       if (res != FR_OK)
         {
           errno = fatfs_compute_errno (res);
@@ -142,7 +149,7 @@ namespace os
     chan_fatfs_file_impl::do_ftruncate (off_t length)
     {
       // Since f_truncate() has no param, do it in two steps.
-      FRESULT res = f_lseek (&ff_fil_, length);
+      FRESULT res = f_lseek (&ff_fil_, static_cast<FSIZE_t> (length));
       if (res != FR_OK)
         {
           errno = fatfs_compute_errno (res);

@@ -40,8 +40,15 @@ namespace os
   {
     // ========================================================================
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wweak-template-vtables"
+#endif
+
     // Explicit template instantiation.
     template class directory_implementable<chan_fatfs_directory_impl> ;
+
+#pragma GCC diagnostic pop
 
     // ========================================================================
 

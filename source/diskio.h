@@ -2,8 +2,8 @@
 /  Low level disk interface modlue include file   (C)ChaN, 2014          /
 /-----------------------------------------------------------------------*/
 
-#ifndef _DISKIO_DEFINED
-#define _DISKIO_DEFINED
+#ifndef DISKIO_H_
+#define DISKIO_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,4 +91,4 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 }
 #endif
 
-#endif
+#endif /* DISKIO_H_ */

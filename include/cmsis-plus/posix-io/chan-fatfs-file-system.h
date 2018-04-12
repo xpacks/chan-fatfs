@@ -83,7 +83,7 @@ namespace os
        */
 
       virtual
-      ~chan_fatfs_file_system_impl ();
+      ~chan_fatfs_file_system_impl () override;
 
       /**
        * @}
@@ -169,6 +169,7 @@ namespace os
        */
 
       // Chan FatFS file system status.
+      // It includes a FF_MAX_SS bytes buffer.
       FATFS ff_fs_;
 
       /**
@@ -221,7 +222,7 @@ namespace os
          */
 
         virtual
-        ~chan_fatfs_file_system_impl_lockable ();
+        ~chan_fatfs_file_system_impl_lockable () override;
 
         /**
          * @}
@@ -320,7 +321,8 @@ namespace os
 
         file_type* fil = fs.allocate_file<file_type> (locker_);
 
-        FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
+        FIL* ff_fil =
+            (static_cast<chan_fatfs_file_impl&> (fil->impl ())).impl_data ();
         FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
 
         if (res != FR_OK)
@@ -339,7 +341,8 @@ namespace os
       {
         directory_type* dir = fs.allocate_directory<directory_type> (locker_);
 
-        FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
+        FFDIR* ff_dir =
+            &((static_cast<chan_fatfs_directory_impl&> (dir->impl ())).ff_dir_);
         FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
 
         if (res != FR_OK)

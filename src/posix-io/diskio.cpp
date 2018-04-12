@@ -7,6 +7,10 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
+#if defined(OS_USE_OS_APP_CONFIG_H)
+#include <cmsis-plus/os-app-config.h>
+#endif
+
 // OS_USE_MICRO_OS_PLUS
 //#include "diskio.h"		/* FatFs lower layer API */
 #include "chan-fatfs/diskio.h"   /* FatFs lower layer API */
@@ -38,15 +42,24 @@
  * valid if STA_NODISK is set.
  */
 DSTATUS
-disk_status (PDRV pdrv __attribute__((unused)))
+disk_status (PDRV pdrv)
 {
   DSTATUS stat = 0;
+
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
+  if (!pdb->is_opened ())
+    {
+      stat |= STA_NOINIT;
+    }
+
+  // TODO: add support to indicate that no media is in the drive.
+  // TODO: add support to indicate the media is write protected.
 
   return stat;
 }
 
 /*-----------------------------------------------------------------------*/
-/* Initialize a Drive                                                    */
+/* Initialise/Deinitialise a Drive                                                    */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS
@@ -55,8 +68,24 @@ disk_initialize (PDRV pdrv /* Pointer to block device */
 {
   DSTATUS stat = 0;
 
-  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
   int ret = pdb->open ();
+  if (ret == -1)
+    {
+      stat |= STA_NOINIT;
+    }
+
+  return stat;
+}
+
+DSTATUS
+disk_deinitialize (PDRV pdrv /* Pointer to block device */
+)
+{
+  DSTATUS stat = 0;
+
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
+  int ret = pdb->close ();
   if (ret == -1)
     {
       stat |= STA_NOINIT;
@@ -76,8 +105,8 @@ disk_read (PDRV pdrv, /* Pointer to block device */
            UINT count /* Number of sectors to read */
            )
 {
-  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
-  int ret = pdb->read_block (buff, sector, count);
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
+  ssize_t ret = pdb->read_block (buff, sector, count);
   if (ret > 0)
     {
       return RES_OK;
@@ -96,8 +125,8 @@ disk_write (PDRV pdrv, /* Pointer to block device */
             UINT count /* Number of sectors to write */
             )
 {
-  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
-  int ret = pdb->write_block (buff, sector, count);
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
+  ssize_t ret = pdb->write_block (buff, sector, count);
   if (ret > 0)
     {
       return RES_OK;
@@ -116,20 +145,20 @@ disk_ioctl (PDRV pdrv, /* Pointer to block device */
             )
 {
   DRESULT res = RES_OK;
-  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
+  os::posix::block_device* pdb = static_cast<os::posix::block_device*> (pdrv);
   if (cmd == GET_SECTOR_COUNT)
     {
-      DWORD* pdw = (DWORD*) buff;
+      DWORD* pdw = static_cast<DWORD*> (buff);
       *pdw = pdb->blocks ();
     }
   else if (cmd == GET_SECTOR_SIZE)
     {
-      WORD* pw = (WORD*) buff;
-      *pw = (WORD) pdb->block_logical_size_bytes ();
+      WORD* pw = static_cast<WORD*> (buff);
+      *pw = static_cast<WORD> (pdb->block_logical_size_bytes ());
     }
   else if (cmd == GET_BLOCK_SIZE)
     {
-      DWORD* pdw = (DWORD*) buff;
+      DWORD* pdw = static_cast<DWORD*> (buff);
       *pdw = pdb->block_physical_size_bytes ();
     }
   else if (cmd == CTRL_SYNC)
@@ -137,22 +166,6 @@ disk_ioctl (PDRV pdrv, /* Pointer to block device */
       pdb->sync ();
     }
   return res;
-}
-
-DSTATUS
-disk_deinitialize (PDRV pdrv /* Pointer to block device */
-)
-{
-  DSTATUS stat = 0;
-
-  os::posix::block_device* pdb = (os::posix::block_device*) pdrv;
-  int ret = pdb->close ();
-  if (ret == -1)
-    {
-      stat |= STA_NOINIT;
-    }
-
-  return stat;
 }
 
 // ----------------------------------------------------------------------------

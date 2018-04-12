@@ -25,10 +25,15 @@
 #include "chan-fatfs/diskio.h"   /* Declarations of device I/O functions */
 
 // OS_USE_MICRO_OS_PLUS
+#include <string.h>
+
+// OS_USE_MICRO_OS_PLUS
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
+#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 7
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
+#endif
 
 /*--------------------------------------------------------------------------
 
@@ -40,6 +45,8 @@
 #error Wrong include file (ff.h).
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-macros"
 
 /* Character code support macros */
 #define IsUpper(c)		((c) >= 'A' && (c) <= 'Z')
@@ -48,6 +55,8 @@
 #define IsSurrogate(c)	((c) >= 0xD800 && (c) <= 0xDFFF)
 #define IsSurrogateH(c)	((c) >= 0xD800 && (c) <= 0xDBFF)
 #define IsSurrogateL(c)	((c) >= 0xDC00 && (c) <= 0xDFFF)
+
+#pragma GCC diagnostic pop
 
 
 /* Additional file attribute bits for internal use */
@@ -85,6 +94,9 @@
 
 /* FatFs refers the FAT structure as simple byte array instead of structure member
 / because the C structure is not binary compatible between different platforms */
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-macros"
 
 #define BS_JmpBoot			0		/* x86 jump instruction (3-byte) */
 #define BS_OEMName			3		/* OEM name (8-byte) */
@@ -402,13 +414,13 @@ typedef struct {
 					0xA9,0xAA,0xAC,0xAD,0xB5,0xB6,0xB7,0xB8,0xBD,0xBE,0xC6,0xC7,0xCF,0xCF,0xD0,0xEF, \
 					0xF0,0xF1,0xD1,0xD2,0xD3,0xF5,0xD4,0xF7,0xF8,0xF9,0xD5,0x96,0x95,0x98,0xFE,0xFF}
 
-
 /* DBCS code range |----- 1st byte -----|  |----------- 2nd byte -----------| */
 #define TBL_DC932 {0x81, 0x9F, 0xE0, 0xFC, 0x40, 0x7E, 0x80, 0xFC, 0x00, 0x00}
 #define TBL_DC936 {0x81, 0xFE, 0x00, 0x00, 0x40, 0x7E, 0x80, 0xFE, 0x00, 0x00}
 #define TBL_DC949 {0x81, 0xFE, 0x00, 0x00, 0x41, 0x5A, 0x61, 0x7A, 0x81, 0xFE}
 #define TBL_DC950 {0x81, 0xFE, 0x00, 0x00, 0x40, 0x7E, 0xA1, 0xFE, 0x00, 0x00}
 
+#pragma GCC diagnostic pop
 
 /* Macros for table definitions */
 #define MERGE_2STR(a, b) a ## b
@@ -2392,8 +2404,13 @@ void create_xdir (
 /* Read an object from the directory                                     */
 /*-----------------------------------------------------------------------*/
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-macros"
+
 #define dir_read_file(dp) dir_read(dp, 0)
 #define dir_read_label(dp) dir_read(dp, 1)
+
+#pragma GCC diagnostic pop
 
 static
 FRESULT dir_read (
@@ -2573,7 +2590,7 @@ FRESULT dir_register (	/* FR_OK:succeeded, FR_DENIED:no free entry or too many S
 #endif
 )
 {
-	FRESULT res;
+	FRESULT res = FR_INVALID_OBJECT;
 	FATFS *fs = dp->obj.fs;
 #if FF_USE_LFN		/* LFN configuration */
 	UINT n, nlen, nent;
@@ -4803,6 +4820,7 @@ FRESULT f_getfree (
 #else
 	{
 		res = FR_OK;
+		memset(&obj, 0, sizeof(obj));
 #endif
 		/* If free_clst is valid, return it without full FAT scan */
 		if (fs->free_clst <= fs->n_fatent - 2) {
@@ -5842,9 +5860,7 @@ FRESULT f_mkfs (
 		if (sz_vol < b_vol) LEAVE_MKFS(FR_MKFS_ABORTED);
 		sz_vol -= b_vol;						/* Volume size */
 	}
-	// OS_USE_MICRO_OS_PLUS
 	if (sz_vol < 128) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Check if volume size is >=128s */
-  // if (sz_vol < 50) LEAVE_MKFS(FR_MKFS_ABORTED);  /* Check if volume size is >=42s */
 
 	/* Pre-determine the FAT type */
 	do {

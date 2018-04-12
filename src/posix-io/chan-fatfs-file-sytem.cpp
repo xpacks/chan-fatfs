@@ -44,10 +44,15 @@ namespace os
   {
     // ========================================================================
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wweak-template-vtables"
+#endif
+
     // Explicit template instantiation.
     template class file_system_implementable<chan_fatfs_file_system_impl> ;
 
-    // template chan_fatfs_file* file_system::allocate_file<chan_fatfs_file>(void);
+#pragma GCC diagnostic pop
 
     // ========================================================================
 
@@ -82,12 +87,15 @@ namespace os
     int
     chan_fatfs_file_system_impl::do_vmkfs (int options, std::va_list args)
     {
-      BYTE partition = static_cast<BYTE> (va_arg(args, int));
       BYTE opt = static_cast<BYTE> (options);
+      BYTE partition = static_cast<BYTE> (va_arg(args, int));
       DWORD au_bytes = va_arg(args, size_t);
       void* work = va_arg(args, void*);
-      UINT size = va_arg(args, size_t);
+      UINT size = static_cast<UINT> (va_arg(args, size_t));
       va_end(args);
+
+      // Guarantee the volume is not mounted.
+      ff_fs_.fs_type = 0;
 
       FRESULT res;
       res = f_mkfs (&device (), partition, opt, au_bytes, work, size);
@@ -130,9 +138,11 @@ namespace os
       return 0;
     }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
     int
-    chan_fatfs_file_system_impl::do_umount (
-        unsigned int flags __attribute__((unused)))
+    chan_fatfs_file_system_impl::do_umount (unsigned int flags)
     {
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("chan_fatfs_file_system_impl::%s(%u)\n", __func__, flags);
@@ -147,6 +157,8 @@ namespace os
         }
       return 0;
     }
+
+#pragma GCC diagnostic pop
 
     // ------------------------------------------------------------------------
 
@@ -211,11 +223,13 @@ namespace os
         class file_system& fs, const char* path, int oflag,
         std::va_list args __attribute__((unused)))
     {
+      fs_ = &fs;
       BYTE mode = compute_mode (oflag);
 
       file_type* fil = fs.allocate_file<file_type> ();
 
-      FIL* ff_fil = ((chan_fatfs_file_impl&) (fil->impl ())).impl_data ();
+      FIL* ff_fil =
+          (static_cast<chan_fatfs_file_impl&> (fil->impl ())).impl_data ();
       FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
 
       if (res != FR_OK)
@@ -231,9 +245,11 @@ namespace os
     chan_fatfs_file_system_impl::do_opendir (class file_system& fs,
                                              const char* dirname)
     {
+      fs_ = &fs;
       directory_type* dir = fs.allocate_directory<directory_type> ();
 
-      FFDIR* ff_dir = &(((chan_fatfs_directory_impl&) (dir->impl ())).ff_dir_);
+      FFDIR* ff_dir =
+          &((static_cast<chan_fatfs_directory_impl&> (dir->impl ())).ff_dir_);
       FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
 
       if (res != FR_OK)
@@ -459,10 +475,10 @@ namespace os
 
       buf->f_bsize = device ().block_logical_size_bytes ();
       buf->f_frsize = buf->f_bsize;
-      buf->f_blocks = device ().blocks ();
+      buf->f_blocks = static_cast<fsblkcnt_t> (device ().blocks ());
 
       // Compute free blocks from free clusters.
-      buf->f_bfree = ff_fs_.free_clst * ff_fs_.csize;
+      buf->f_bfree = static_cast<fsblkcnt_t> (ff_fs_.free_clst * ff_fs_.csize);
       buf->f_bavail = buf->f_bfree;
 
       // Count of files not supported (FatFS does not use inodes).
