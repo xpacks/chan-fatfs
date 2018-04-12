@@ -71,6 +71,11 @@ namespace os
 #if defined(OS_TRACE_POSIX_IO_CHAN_FATFS)
       trace::printf ("chan_fatfs_file_system_impl::%s() @%p\n", __func__, this);
 #endif
+      if (fs_ != nullptr)
+        {
+          fs_->deallocate_files<file_type> ();
+          fs_->deallocate_directories<directory_type> ();
+        }
     }
 
     // ------------------------------------------------------------------------
