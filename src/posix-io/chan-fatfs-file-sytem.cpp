@@ -319,6 +319,14 @@ namespace os
         {
           mode = S_IWUSR;
         }
+      if ((fno.fattrib & AM_DIR) != 0)
+        {
+          mode = S_IFDIR; // Directory
+        }
+      else
+        {
+          mode = S_IFREG; // Regular
+        }
       buf->st_mode = mode;
 
       DWORD mstime = static_cast<DWORD> ((fno.fdate << 16) | (fno.ftime));
