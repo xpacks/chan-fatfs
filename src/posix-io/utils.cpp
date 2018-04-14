@@ -82,9 +82,11 @@ fatfs_compute_errno (FRESULT res)
     case FR_NOT_ENABLED:
     case FR_NO_FILESYSTEM:
     case FR_LOCKED:
-    case FR_MKFS_ABORTED:
     case FR_INVALID_PARAMETER:
       return EINVAL;
+
+    case FR_MKFS_ABORTED:
+      return ECANCELED;
 
     case FR_DISK_ERR:
       return EIO;
