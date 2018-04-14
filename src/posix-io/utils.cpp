@@ -28,6 +28,11 @@
 #include "chan-fatfs/utils.h"
 #include <errno.h>
 
+// Not POSIX, there is no official prototype.
+
+extern "C" time_t
+timegm (struct tm* tim_p);
+
 // ----------------------------------------------------------------------------
 
 DWORD
@@ -60,7 +65,7 @@ fatfs_from_mstime (DWORD mstime)
   tm.tm_min = ((ftime >> 5) & 0x3F);
   tm.tm_sec = (ftime & 0x1F) * 2;
 
-  return mktime (&tm);
+  return timegm (&tm);
 }
 
 int
