@@ -80,7 +80,6 @@ fatfs_compute_errno (FRESULT res)
     case FR_NOT_READY:
     case FR_INVALID_OBJECT:
     case FR_NOT_ENABLED:
-    case FR_NO_FILESYSTEM:
     case FR_LOCKED:
     case FR_INVALID_PARAMETER:
       return EINVAL;
@@ -112,6 +111,9 @@ fatfs_compute_errno (FRESULT res)
 
     case FR_TIMEOUT:
       return EBUSY;
+
+    case FR_NO_FILESYSTEM:
+      return ENODATA;
     }
   return ENOTSUP;
 }
