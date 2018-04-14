@@ -35,6 +35,7 @@
 
 #include <cerrno>
 #include <fcntl.h>
+#include <string.h>
 
 // ----------------------------------------------------------------------------
 
@@ -310,6 +311,8 @@ namespace os
           return -1;
         }
 
+      memset (buf, 0, sizeof(struct stat));
+
       buf->st_size = static_cast<off_t> (fno.fsize);
       mode_t mode = S_IRUSR;
       if ((fno.fattrib & AM_RDO) == 0)
@@ -320,6 +323,7 @@ namespace os
 
       DWORD mstime = static_cast<DWORD> ((fno.fdate << 16) | (fno.ftime));
       buf->st_mtime = fatfs_from_mstime (mstime);
+
       return 0;
     }
 
