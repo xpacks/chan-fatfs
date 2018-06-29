@@ -3639,6 +3639,8 @@ FRESULT f_mount (
 	if (pdrv == 0) {
 	    // Unmount.
 	    fs->fs_type = 0;
+
+	    disk_deinitialize(fs->pdrv);
 	    res = FR_OK;
 	} else {
       res = find_volume(pdrv, vol, fs, 0);
@@ -6242,6 +6244,12 @@ FRESULT f_mkfs (
 	}
 
 	if (disk_ioctl(pdrv, CTRL_SYNC, 0) != RES_OK) LEAVE_MKFS(FR_DISK_ERR);
+
+#if defined(FF_FS_POSIX_INTEGRATION) // OS_USE_MICRO_OS_PLUS
+	// Required to close the device.
+	// Make sure the function does not return prematurely.
+	disk_deinitialize(pdrv);
+#endif
 
 	LEAVE_MKFS(FR_OK);
 }
