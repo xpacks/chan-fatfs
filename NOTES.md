@@ -1,4 +1,4 @@
-## Documentation
+# Documentation
 
 The **Chan FAT FS** main site is
 http://elm-chan.org/fsw/ff/00index_e.html.
@@ -8,4 +8,3 @@ The latest POSIX specs are available from [IEEE The Open Group](http://pubs.open
 ## Tests
 
 TBD
-
