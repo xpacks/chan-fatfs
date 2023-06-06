@@ -8,7 +8,6 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 
 * git repo: https://github.com/xpacks/chan-fatfs.git
 * homepage: https://github.com/xpacks/chan-fatfs
-* latest archive: https://github.com/micro-os-plus/chan-fatfs/archive/xpack.zip
 
 ## Version
 
@@ -46,10 +45,11 @@ Chan FAT FS - Generic FAT File System Module, with a POSIX layer adapter.
 
 * custom, see `LICENSE.txt` in package root
 
---- 
+---
+
 ## Documentation
 
-For completeness, the original documentation, both in English 
+For completeness, the original documentation, both in English
 and Japanese, is preserved in the `doc` folder.
 
 The Chan FAT FS main site is
@@ -64,5 +64,4 @@ These files were extracted from `ff13a.zip`.
 
 TBD
 
-
---- 
+---
