@@ -33,7 +33,7 @@ extern "C"
 {
 #endif
 
-#include "chan-fatfs/ff.h"   /* FatFs lower layer API */
+#include "ff.h"   /* FatFs lower layer API */
 
 #include <time.h>
 
