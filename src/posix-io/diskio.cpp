@@ -25,7 +25,7 @@
 
 /**
  *
- * @param pdrv
+ * @param pdrv Pointer to driver.
  * @return
  * - STA_NOINIT: Indicates that the device has not been initialized and
  * not ready to work. This flag is set on system reset, media removal or

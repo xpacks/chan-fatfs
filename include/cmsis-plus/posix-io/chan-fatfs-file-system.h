@@ -41,6 +41,12 @@
 
 // ----------------------------------------------------------------------------
 
+#pragma GCC diagnostic push
+
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wc++98-compat"
+#endif
+
 namespace os
 {
   namespace posix
@@ -102,9 +108,9 @@ namespace os
 
       /**
        *
-       * @param opt
+       * @param options Mkfs options.
        * @param args (int partition, size_t au_bytes, void* work, size_t size)
-       * @return
+       * @return Error code.
        */
       virtual int
       do_vmkfs (int options, std::va_list args) override;
@@ -364,6 +370,8 @@ namespace os
   // ========================================================================
   } /* namespace posix */
 } /* namespace os */
+
+#pragma GCC diagnostic pop
 
 // ----------------------------------------------------------------------------
 

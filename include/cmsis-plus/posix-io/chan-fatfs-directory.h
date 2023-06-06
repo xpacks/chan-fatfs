@@ -37,6 +37,12 @@
 
 // ----------------------------------------------------------------------------
 
+#pragma GCC diagnostic push
+
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wc++98-compat"
+#endif
+
 namespace os
 {
   namespace posix
@@ -125,6 +131,8 @@ namespace os
   // ========================================================================
   } /* namespace posix */
 } /* namespace os */
+
+#pragma GCC diagnostic pop
 
 // ----------------------------------------------------------------------------
 

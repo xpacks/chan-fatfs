@@ -37,6 +37,14 @@
 #include <unistd.h>
 #include <string.h>
 
+// ----------------------------------------------------------------------------
+
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wc++98-compat"
+#endif
+
+// ----------------------------------------------------------------------------
+
 namespace os
 {
   namespace posix

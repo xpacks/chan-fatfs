@@ -28,8 +28,15 @@
 #include "chan-fatfs/utils.h"
 #include <errno.h>
 
-// Not POSIX, there is no official prototype.
+// ----------------------------------------------------------------------------
 
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wc++98-compat"
+#endif
+
+// ----------------------------------------------------------------------------
+
+// Not POSIX, there is no official prototype.
 extern "C" time_t
 timegm (struct tm* tim_p);
 
