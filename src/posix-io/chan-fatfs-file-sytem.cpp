@@ -234,7 +234,7 @@ namespace os
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html
     file*
     chan_fatfs_file_system_impl::do_vopen (
-        class file_system& fs, const char* path, int oflag,
+        /* class */ file_system& fs, const char* path, int oflag,
         std::va_list args __attribute__((unused)))
     {
       fs_ = &fs;
@@ -256,7 +256,7 @@ namespace os
     }
 
     directory*
-    chan_fatfs_file_system_impl::do_opendir (class file_system& fs,
+    chan_fatfs_file_system_impl::do_opendir (/* class */ file_system& fs,
                                              const char* dirname)
     {
       fs_ = &fs;
@@ -405,7 +405,7 @@ namespace os
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/utime.html
     int
     chan_fatfs_file_system_impl::do_utime (const char* path,
-                                           const struct utimbuf* times)
+                                           const /* struct */ utimbuf* times)
     {
       // FatFS has no access date, only modified date.
       DWORD mstime = fatfs_to_mstime (times->modtime);

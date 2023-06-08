@@ -122,11 +122,11 @@ namespace os
       do_umount (unsigned int flags) override;
 
       virtual file*
-      do_vopen (class file_system& fs, const char* path, int oflag,
+      do_vopen (/* class */ file_system& fs, const char* path, int oflag,
                 std::va_list args) override;
 
       virtual directory*
-      do_opendir (class file_system& fs, const char* dirname) override;
+      do_opendir (/* class */ file_system& fs, const char* dirname) override;
 
       virtual int
       do_mkdir (const char* path, mode_t mode) override;
@@ -153,7 +153,7 @@ namespace os
       do_unlink (const char* path) override;
 
       virtual int
-      do_utime (const char* path, const struct utimbuf* times) override;
+      do_utime (const char* path, const /* struct */ utimbuf* times) override;
 
       virtual int
       do_statvfs (struct statvfs* buf) override;
@@ -246,11 +246,11 @@ namespace os
         // Implementations.
 
         virtual file*
-        do_vopen (class file_system& fs, const char* path, int oflag,
+        do_vopen (/* class */ file_system& fs, const char* path, int oflag,
                   std::va_list args) override;
 
         virtual directory*
-        do_opendir (class file_system& fs, const char* dirname) override;
+        do_opendir (/* class */ file_system& fs, const char* dirname) override;
 
         // ----------------------------------------------------------------------
 
@@ -320,7 +320,7 @@ namespace os
     template<typename L>
       file*
       chan_fatfs_file_system_impl_lockable<L>::do_vopen (
-          class file_system& fs, const char* path, int oflag,
+          /* class */ file_system& fs, const char* path, int oflag,
           std::va_list args __attribute__((unused)))
       {
         BYTE mode = compute_mode (oflag);
@@ -343,7 +343,7 @@ namespace os
     template<typename L>
       directory*
       chan_fatfs_file_system_impl_lockable<L>::do_opendir (
-          class file_system& fs, const char* dirname)
+          /* class */ file_system& fs, const char* dirname)
       {
         directory_type* dir = fs.allocate_directory<directory_type> (locker_);
 

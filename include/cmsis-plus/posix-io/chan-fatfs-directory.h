@@ -65,7 +65,7 @@ namespace os
 
     public:
 
-      chan_fatfs_directory_impl (class file_system& fs);
+      chan_fatfs_directory_impl (/* class */ file_system& fs);
 
       /**
        * @cond ignore
@@ -100,7 +100,7 @@ namespace os
 
       // Implementations.
 
-      virtual struct dirent*
+      virtual /* struct */ dirent*
       do_read (void) override;
 
       virtual void

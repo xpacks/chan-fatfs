@@ -63,7 +63,7 @@ namespace os
 
     // ========================================================================
 
-    chan_fatfs_file_impl::chan_fatfs_file_impl (class file_system& fs) :
+    chan_fatfs_file_impl::chan_fatfs_file_impl (/* class */ file_system& fs) :
         file_impl
           { fs }
     {

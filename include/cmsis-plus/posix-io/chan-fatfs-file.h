@@ -68,7 +68,7 @@ namespace os
 
     public:
 
-      chan_fatfs_file_impl (class file_system& fs);
+      chan_fatfs_file_impl (/* class */ file_system& fs);
 
       /**
        * @cond ignore

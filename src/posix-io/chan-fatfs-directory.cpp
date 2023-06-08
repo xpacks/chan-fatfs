@@ -58,7 +58,7 @@ namespace os
 
     // ========================================================================
 
-    chan_fatfs_directory_impl::chan_fatfs_directory_impl (class file_system& fs) :
+    chan_fatfs_directory_impl::chan_fatfs_directory_impl (/* class */ file_system& fs) :
         directory_impl
           { fs }
     {
@@ -78,7 +78,7 @@ namespace os
 
     // ------------------------------------------------------------------------
 
-    struct dirent*
+    /* struct */ dirent*
     chan_fatfs_directory_impl::do_read (void)
     {
       FILINFO fno;
