@@ -40,9 +40,14 @@
 
 // ----------------------------------------------------------------------------
 
+// OS_USE_MICRO_OS_PLUS
+#if !defined(__linux__)
+
 // Not POSIX, there is no official prototype.
 extern "C" time_t
 timegm (struct tm* tim_p);
+
+# endif // !defined(linux)
 
 // ----------------------------------------------------------------------------
 
