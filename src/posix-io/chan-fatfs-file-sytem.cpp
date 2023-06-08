@@ -242,8 +242,15 @@ namespace os
 
       file_type* fil = fs.allocate_file<file_type> ();
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
       FIL* ff_fil =
           (static_cast<chan_fatfs_file_impl&> (fil->impl ())).impl_data ();
+#pragma GCC diagnostic pop
+
       FRESULT res = f_open (&ff_fs_, ff_fil, path, mode);
 
       if (res != FR_OK)
@@ -505,6 +512,12 @@ namespace os
           return -1;
         }
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
+
       buf->f_bsize = device ().block_logical_size_bytes ();
       buf->f_frsize = buf->f_bsize;
       buf->f_blocks = static_cast<fsblkcnt_t> (device ().blocks ());
@@ -512,6 +525,8 @@ namespace os
       // Compute free blocks from free clusters.
       buf->f_bfree = static_cast<fsblkcnt_t> (ff_fs_.free_clst * ff_fs_.csize);
       buf->f_bavail = buf->f_bfree;
+
+#pragma GCC diagnostic pop
 
       // Count of files not supported (FatFS does not use inodes).
       buf->f_files = 0;
