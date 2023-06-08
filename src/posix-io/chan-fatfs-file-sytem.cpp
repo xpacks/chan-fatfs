@@ -54,6 +54,8 @@ namespace os
 #pragma GCC diagnostic push
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wweak-template-vtables"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wuseless-cast"
 #endif
 
     // Explicit template instantiation.
@@ -260,8 +262,15 @@ namespace os
       fs_ = &fs;
       directory_type* dir = fs.allocate_directory<directory_type> ();
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#endif
       FFDIR* ff_dir =
           &((static_cast<chan_fatfs_directory_impl&> (dir->impl ())).ff_dir_);
+#pragma GCC diagnostic pop
+
       FRESULT res = f_opendir (&ff_fs_, ff_dir, dirname);
 
       if (res != FR_OK)

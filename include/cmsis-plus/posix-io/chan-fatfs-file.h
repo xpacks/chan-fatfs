@@ -111,8 +111,14 @@ namespace os
       virtual ssize_t
       do_write (const void* buf, std::size_t nbyte) override;
 
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#elif defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wredundant-tags"
+#endif
       virtual int
       do_fstat (struct stat* buf) override;
+#pragma GCC diagnostic pop
 
       virtual off_t
       do_lseek (off_t offset, int whence) override;

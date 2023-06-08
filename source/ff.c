@@ -29,10 +29,19 @@
 
 // OS_USE_MICRO_OS_PLUS
 #pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#pragma clang diagnostic ignored "-Wextra-semi-stmt"
+#pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#elif defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#if defined(__GNUC__) && !defined(__clang__) && __GNUC__ >= 7
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
+#pragma GCC diagnostic ignored "-Warith-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#pragma GCC diagnostic ignored "-Wstringop-overflow="
 #endif
 
 /*--------------------------------------------------------------------------
@@ -45,8 +54,10 @@
 #error Wrong include file (ff.h).
 #endif
 
+// OS_USE_MICRO_OS_PLUS
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-macros"
+#pragma GCC diagnostic ignored "-Warith-conversion"
 
 /* Character code support macros */
 #define IsUpper(c)		((c) >= 'A' && (c) <= 'Z')

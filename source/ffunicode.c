@@ -29,7 +29,12 @@
 
 // OS_USE_MICRO_OS_PLUS
 #pragma GCC diagnostic push
+#if defined(__clang__)
+#elif defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Warith-conversion"
+#pragma GCC diagnostic ignored "-Wswitch-default"
+#endif
 
 #if FF_USE_LFN	/* This module is blanked when non-LFN configuration */
 
