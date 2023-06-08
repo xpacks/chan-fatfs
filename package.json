@@ -1,6 +1,6 @@
 {
   "name": "@xpacks/chan-fatfs",
-  "version": "0.13.1-1",
+  "version": "0.13.1-2",
   "description": "A source code library with the Chan FAT FS",
   "main": "",
   "scripts": {
