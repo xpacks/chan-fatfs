@@ -107,7 +107,7 @@ namespace os
           errno = fatfs_compute_errno (res);
           return -1;
         }
-      return br;
+      return static_cast<ssize_t> (br);
     }
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/write.html
@@ -122,7 +122,7 @@ namespace os
           errno = fatfs_compute_errno (res);
           return -1;
         }
-      return bw;
+      return static_cast<ssize_t> (bw);
     }
 
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/fstat.html
