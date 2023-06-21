@@ -42,6 +42,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wc++98-compat"
 #endif
+#pragma GCC diagnostic ignored "-Wuseless-cast"
 
 // ----------------------------------------------------------------------------
 

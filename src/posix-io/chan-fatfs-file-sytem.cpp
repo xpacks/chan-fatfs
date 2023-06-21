@@ -42,6 +42,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wc++98-compat"
 #endif
+#pragma GCC diagnostic ignored "-Wuseless-cast"
 
 // ----------------------------------------------------------------------------
 
@@ -54,8 +55,6 @@ namespace os
 #pragma GCC diagnostic push
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wweak-template-vtables"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic ignored "-Wuseless-cast"
 #endif
 
     // Explicit template instantiation.
