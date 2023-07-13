@@ -1,7 +1,7 @@
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/xpacks/chan-fatfs)](https://github.com/xpacks/chan-fatfs/blob/xpack/package.json)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/xpacks/chan-fatfs)](https://github.com/xpacks/chan-fatfs/tags/)
 
-# A source code library Chan FAT FS
+# A source code library with Chan FAT FS
 
 This project provides a convenient way to integrate the
 [Chan FAT FS](http://elm-chan.org/fsw/ff/00index_e.html)
