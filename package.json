@@ -1,6 +1,6 @@
 {
   "name": "@xpacks/chan-fatfs",
-  "version": "0.13.1-3.pre.2",
+  "version": "0.13.1-3",
   "description": "A source code library with the Chan FAT FS",
   "main": "",
   "scripts": {
@@ -33,10 +33,12 @@
     "email": "ilg@livius.net",
     "url": "https://github.com/ilg-ul"
   },
-  "contributors": [{
-    "name": "Chan",
-    "url": "http://elm-chan.org"
-  }],
+  "contributors": [
+    {
+      "name": "Chan",
+      "url": "http://elm-chan.org"
+    }
+  ],
   "license": "MIT",
   "config": {},
   "dependencies": {},
@@ -50,13 +52,9 @@
       "https://github.com/xpack-3rd-party",
       "https://github.com/xpack-dev-tools"
     ],
-    "devDependencies": {
-    },
-    "properties": {
-    },
-    "actions": {
-    },
-    "buildConfigurations": {
-    }
+    "devDependencies": {},
+    "properties": {},
+    "actions": {},
+    "buildConfigurations": {}
   }
 }
