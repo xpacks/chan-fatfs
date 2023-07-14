@@ -53,9 +53,9 @@ No need to add a tag here, it'll be added when the release is created.
 
 ### Increase the version
 
-Determine the upstream version (like `1.0.0`)
+Determine the upstream version (like `0.13.1`)
 
-- <https://arm-software.github.io/CMSIS_5/RTOS/html/rtosValidation.html>
+- <http://elm-chan.org/fsw/ff/00index_e.html>
 
 Update the`package.json` file; add an extra digit in the
 pre-release field, and initially also add `.pre`,
