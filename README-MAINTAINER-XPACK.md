@@ -1,4 +1,3 @@
-[![CI on Push](https://github.com/xpacks/chan-fatfs/actions/workflows/CI.yml/badge.svg)](https://github.com/xpacks/chan-fatfs/actions/workflows/CI.yml)
 [![GitHub issues](https://img.shields.io/github/issues/xpacks/chan-fatfs.svg)](https://github.com/xpacks/chan-fatfs/issues/)
 [![GitHub pulls](https://img.shields.io/github/issues-pr/xpacks/chan-fatfs.svg)](https://github.com/xpacks/chan-fatfs/pulls)
 

@@ -1,7 +1,7 @@
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/xpacks/chan-fatfs)](https://github.com/xpacks/chan-fatfs/blob/xpack/package.json)
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/xpacks/chan-fatfs)](https://github.com/xpacks/chan-fatfs/tags/)
 
-# A source code library with Chan FAT FS
+# An xpm/npm package with Chan FAT FS
 
 This project provides a convenient way to integrate the
 [Chan FAT FS](http://elm-chan.org/fsw/ff/00index_e.html)
@@ -9,6 +9,14 @@ into the xpm/npm ecosystem, by allowing to install it as a package dependency.
 
 The open-source project is hosted on GitHub as
 [xpacks/chan-fatfs](https://github.com/xpacks/chan-fatfs).
+
+## Maintainer info
+
+This page is addressed to developers who plan to include this source
+library into their own projects.
+
+For maintainer info, please see the
+[README-MAINTAINER-XPACK](README-MAINTAINER-XPACK.md) file.
 
 ## Install
 
@@ -54,7 +62,7 @@ This project can be installed as a package from GitHub with:
 cd my-project
 xpm init # Unless a package.json is already present
 
-xpm install github:xpacks/chan-fatfs
+xpm install github:xpacks/chan-fatfs#0.13.1-3 --save-dev --copy
 
 ls -l xpacks/@xpacks/chan-fatfs
 ```
@@ -104,6 +112,15 @@ When there are new upstream releases:
 - the local `master` is merged into `xpack-develop`
 - the project is tested
 - `xpack-develop` is merged into `xpack`
+
+### Status
+
+The **xpacks/chan-fatfs** source library is fully functional,
+but starting with mid 2023 it was marked as end-of-life and
+is not recommended for new designs.
+
+A new package will be available in the `@xpack-3rd-party` scope,
+as part of µOS++ IVe.
 
 ## License
 
