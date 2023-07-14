@@ -62,7 +62,7 @@ This project can be installed as a package from GitHub with:
 cd my-project
 xpm init # Unless a package.json is already present
 
-xpm install github:xpacks/chan-fatfs#0.13.1-3 --save-dev --copy
+xpm install github:xpacks/chan-fatfs#v0.13.1-3 --save-dev --copy
 
 ls -l xpacks/@xpacks/chan-fatfs
 ```
