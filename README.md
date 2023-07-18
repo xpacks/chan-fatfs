@@ -51,8 +51,7 @@ npm install --global xpm@latest
 For details please follow the instructions in the
 [xPack install](https://xpack.github.io/install/) page.
 
-@warning
-Be sure **xpm** is not installed with administrative rights.
+Warning: Be sure **xpm** is not installed with administrative rights.
 
 #### xpm
 
@@ -99,6 +98,8 @@ xPack specific branches:
 
 - `xpack`, with the latest stable version (default)
 - `xpack-develop`, with the current development version
+- `originals`, with the original Chan content, reconstructed
+  from the distributed archives
 
 All development is done in the `xpack-develop` branch, and contributions via
 Pull Requests should be directed to this branch.
@@ -106,12 +107,11 @@ Pull Requests should be directed to this branch.
 When new releases are published, the `xpack-develop` branch is merged
 into `xpack`.
 
-When there are new upstream releases:
+## Developer info
 
-- upstream `master` is merged into the local `master`
-- the local `master` is merged into `xpack-develop`
-- the project is tested
-- `xpack-develop` is merged into `xpack`
+### Overview
+
+The current files were extracted from the `ff13a.zip` archive.
 
 ### Status
 
@@ -122,9 +122,81 @@ is not recommended for new designs.
 A new package will be available in the `@xpack-3rd-party` scope,
 as part of µOS++ IVe.
 
+### Build & integration info
+
+To ease the integration of this package into user projects, there
+are already made CMake configuration files (see below).
+
+For other build systems, consider the following details:
+
+#### Include folders
+
+The following folders should be passed to the compiler during the build:
+
+- `include`
+
+#### Source files
+
+- `source/ff.c`
+- `source/ffunicode.c`
+- `src/posix-io/chan-fatfs-directory.cpp`
+- `src/posix-io/chan-fatfs-file-sytem.cpp`
+- `src/posix-io/chan-fatfs-file.cpp`
+- `src/posix-io/diskio.cpp`
+- `src/posix-io/ffsystem.cpp`
+- `src/posix-io/utils.cpp`
+
+#### Preprocessor definitions
+
+- none
+
+#### Compiler options
+
+- none
+
+#### Dependencies
+
+- none
+
+#### CMake
+
+To integrate the **chan-fatfs** source library
+into a CMake application,
+add this folder to the build:
+
+```cmake
+add_subdirectory("xpacks/@xpacks/chan-fatfs")`
+```
+
+The result is an interface library that can be added as an application
+dependency with:
+
+```cmake
+target_link_libraries(your-target PRIVATE
+
+  xpacks::chan-fatfs
+)
+```
+
+### Examples
+
+- none
+
+### Known problems
+
+- none
+
+### Limitations
+
+- none
+
+### Tests
+
+- none
+
 ## License
 
-The original content is released under the
+The xPack specific content is released under the
 [MIT License](https://opensource.org/licenses/MIT/),
 with all rights reserved to
 [Liviu Ionescu](https://github.com/ilg-ul).
