@@ -32,7 +32,7 @@ to **add it as a dependency** to the project via **xpm**.
 
 Along with the source files, this project also includes a
 `package.json` file with the metadata that allows it to be identified as an
-**xpm/npm** package so that it can be directly installed from GitHub.
+**xpm/npm** package that can be installed automatically as a dependency.
 
 #### Prerequisites
 
@@ -55,7 +55,7 @@ Warning: Be sure **xpm** is not installed with administrative/root rights.
 
 #### xpm
 
-This source code library can be installed as a sub-folder of `xpacks` with:
+This source code library can be installed as a sub-folder below `xpacks` with:
 
 ```sh
 cd my-project
@@ -65,6 +65,8 @@ xpm install github:xpacks/chan-fatfs#v0.13.1-3 --save-dev --copy
 
 ls -l xpacks/@xpacks/chan-fatfs
 ```
+
+Note: On Windows use `dir` and back-slashes.
 
 #### npm
 
