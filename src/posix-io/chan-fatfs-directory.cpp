@@ -84,7 +84,12 @@ namespace os
 
       // Copy the name from the stack FILINFO to the object member.
       strncpy (dir_entry_.d_name, fno.fname, sizeof(dir_entry_.d_name) - 1);
+#pragma GCC diagnostic push
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
+#endif
       dir_entry_.d_name[sizeof(dir_entry_.d_name) - 1] = '\0';
+#pragma GCC diagnostic pop
 
       return &dir_entry_;
     }
