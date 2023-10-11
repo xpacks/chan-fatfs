@@ -6,6 +6,38 @@ Please check
 [GitHub](https://github.com/xpacks/chan-fatfs/issues)
 and close existing issues and pull requests.
 
+## 2023-10-11
+
+* v0.13.1-4
+* dda03e3 silence warnings
+
+## 2023-07-22
+
+* 51fa9b3 README updates
+
+## 2023-07-21
+
+* 1c83771 README updates
+* 7b37d6e README updates
+
+## 2023-07-18
+
+* a3747ad README update
+
+## 2023-07-14
+
+* 9153af4 README update
+* b0adb5f README update
+* 214d333 README updates
+* 372faaa README updates
+* 8667835 README updates
+
+## 2023-07-13
+
+* 5bf8b1d README update
+* 82a67cb 0.13.1-3
+* 057c7a4 prepare v0.13.1-3
+
 ## 2023-07-13
 
 * v0.13.1-3

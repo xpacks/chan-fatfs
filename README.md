@@ -61,7 +61,7 @@ This source code library can be installed as a sub-folder below `xpacks` with:
 cd my-project
 xpm init # Add a package.json if not already present
 
-xpm install github:xpacks/chan-fatfs#v0.13.1-3 --save-dev --copy
+xpm install github:xpacks/chan-fatfs#v0.13.1-4 --save-dev --copy
 
 ls -l xpacks/@xpacks/chan-fatfs
 ```
