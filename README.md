@@ -61,7 +61,7 @@ This source code library can be installed as a sub-folder below `xpacks` with:
 cd my-project
 xpm init # Add a package.json if not already present
 
-xpm install github:xpacks/chan-fatfs#v0.13.1-4 --save-dev --copy
+xpm install github:xpacks/chan-fatfs#v0.13.1-5 --save-dev --copy
 
 ls -l xpacks/@xpacks/chan-fatfs
 ```
@@ -101,14 +101,14 @@ In addition to the original `main` branch, there are two
 xPack specific branches:
 
 - `xpack`, with the latest stable version (default)
-- `xpack-develop`, with the current development version
+- `xpack-development`, with the current development version
 - `originals`, with the original Chan content, reconstructed
   from the distributed archives
 
-All development is done in the `xpack-develop` branch, and contributions via
+All development is done in the `xpack-development` branch, and contributions via
 Pull Requests should be directed to this branch.
 
-When new releases are published, the `xpack-develop` branch is merged
+When new releases are published, the `xpack-development` branch is merged
 into `xpack`.
 
 ## Developer info

@@ -6,9 +6,18 @@ Please check
 [GitHub](https://github.com/xpacks/chan-fatfs/issues)
 and close existing issues and pull requests.
 
+## 2025-08-19
+
+* v0.13.1-5
+* 85d6c81 package.json add xpm action link
+* 21d0921 silence clang -Wswitch-default
+
 ## 2023-10-11
 
-* v0.13.1-4
+* acadec3 .npmignore update
+* 5265763 0.13.1-4
+* 8173055 .npmignore update
+* 5342b9b prepare v0.13.1-4
 * dda03e3 silence warnings
 
 ## 2023-07-22

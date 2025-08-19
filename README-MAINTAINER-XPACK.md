@@ -20,13 +20,13 @@ git clone \
   ~/Work/xpack-3rd-party/chan-fatfs.git
 ```
 
-For development purposes, clone the `xpack-develop` branch:
+For development purposes, clone the `xpack-development` branch:
 
 ```sh
 rm -rf ~/Work/xpack-3rd-party/chan-fatfs.git && \
 mkdir -p ~/Work/xpack-3rd-party && \
 git clone \
-  --branch xpack-develop \
+  --branch xpack-development \
   https://github.com/xpacks/chan-fatfs.git \
   ~/Work/xpack-3rd-party/chan-fatfs.git
 ```
@@ -46,7 +46,7 @@ There are no fixed releases, the project aims to follow the upstream releases.
 
 In the `xpacks/chan-fatfs` Git repo:
 
-- switch to the `xpack-develop` branch
+- switch to the `xpack-development` branch
 - if needed, merge the `xpack` branch
 
 No need to add a tag here, it'll be added when the release is created.
@@ -59,7 +59,7 @@ Determine the upstream version (like `0.13.1`)
 
 Update the`package.json` file; add an extra digit in the
 pre-release field, and initially also add `.pre`,
-for example `0.13.1-4.pre.1`.
+for example `0.13.1-5.pre.1`.
 
 ### Fix possible open issues
 
@@ -67,7 +67,7 @@ Check GitHub issues and pull requests:
 
 - <https://github.com/xpacks/chan-fatfs/issues/>
 
-and fix them; assign them to a milestone (like `0.13.1-4`).
+and fix them; assign them to a milestone (like `0.13.1-5`).
 
 ### Update `README-MAINTAINER-XPACK.md`
 
@@ -78,8 +78,8 @@ related to the new version.
 
 - open the `CHANGELOG-XPACK.md` file
 - check if all previous fixed issues are in
-- add a new entry like _* v0.13.1-4_
-- commit with a message like _prepare v0.13.1-4_
+- add a new entry like _* v0.13.1-5_
+- commit with a message like _prepare v0.13.1-5_
 
 ### Push changes
 
@@ -87,14 +87,14 @@ related to the new version.
 
 ### Commit the new version
 
-- select the `xpack-develop` branch
+- select the `xpack-development` branch
 - commit all changes
 - `npm pack` and check the content of the archive, which should list
   only `package.json`, `README.md`, `LICENSE`, `CHANGELOG-XPACK.md`,
   the `doxygen-awesome-*.js` and `doxygen-custom/*` files;
   possibly adjust `.npmignore`
-- `npm version 0.13.1-4`
-- push the `xpack-develop` branch to GitHub
+- `npm version 0.13.1-5`
+- push the `xpack-development` branch to GitHub
 - the `postversion` npm script should also update tags via `git push origin --tags`
 
 ### Update the repo
@@ -102,6 +102,6 @@ related to the new version.
 When the package is considered stable:
 
 - with a Git client (VS Code is fine)
-- merge `xpack-develop` into `xpack`
+- merge `xpack-development` into `xpack`
 - push to GitHub
-- select `xpack-develop`
+- select `xpack-development`
