@@ -54,7 +54,9 @@
     ],
     "devDependencies": {},
     "properties": {},
-    "actions": {},
+    "actions": {
+      "link": "xpm link"
+    },
     "buildConfigurations": {}
   }
 }
